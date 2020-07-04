@@ -85,3 +85,28 @@ quien es invocado por quien/es.
 Debe brindar datos sobre la participación de cada uno de los integrantes en el desarrollo de la aplicación. Para ello, deberá mostrar por pantalla, la siguiente información por Autor, ordenada en forma descendente, por líneas de código.
 
 También deberá generar la misma salida al archivo “participacion.txt” 
+
+# Apuntes tomados: 
+
+Tenemos una aplicacion
+un analizador de esa aplicacion: 
+
+separa entre comentarios y codigo
+genera 2 csv 
+
+- Input del usuario:
+
+    - preguntar por una funcion
+    - “?todo” “#todo” “imprimir ?todo”, debe enviarse al archivo ayuda_funciones.txt
+    - Seguir preguntando hasta que reciba un enter vacio
+
+cuadro de invocacion donde veamos el flujo de invocaciones
+
+Idea de Dani: usar programas de parcial/recu (ej 3) para ahorrar $$$
+
+Modulos funcion principal:
+
+    1) autor
+    2) buscar las funciones por nombre
+    3) contar las lineas de las funciones
+    4) generar porcentaje de lineas escritas por determinado autor
