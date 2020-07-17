@@ -1,3 +1,5 @@
+import csv
+
 def diccionario_de_funciones(fuente_unico):
     """[Autor: Daniela Bolivar]
        [Ayuda: Crea un diccionario con las funciones del programa,
@@ -55,7 +57,7 @@ def invocacion_a_funcion(funcion,lista):
 
     for i in range(3,len(lista)):
         
-            if funcion in lista[i]:
+        if funcion in lista[i]:
             #Cuento la cantidad de veces que la función 'x' es invocada por la función 'y'      
             k+=1
     
@@ -152,20 +154,19 @@ def panel_de_funciones(fuente_unico, comentarios):
     """
     columnas=[FUNCION, Parámetros, Líneas, Invocaciones, Returns, If/Elif, For, While, Break, Exit, Coment, Ayuda, Autor]
 
-     writer=csv.DictWriter(panel_general, fieldnames=columnas) #Creo un diccionario 
+    writer=csv.DictWriter(panel_general, fieldnames=columnas) #Creo un diccionario 
 
-     writer.writeheader() #Escribo el nombre de las columnas
+    writer.writeheader() #Escribo el nombre de las columnas
 
      #Creo el diccionario que analiza ambos archivos csv a la vez
-     diccionario_funciones=analisis_comentarios_funciones(analisis_codigo_funciones(fuente_unico),comentarios)
+    diccionario_funciones=analisis_comentarios_funciones(analisis_codigo_funciones(fuente_unico),comentarios)
 
 
      #Escrivo un csv donde cada línea corresponde al análisis de una función
-     for funcion in diccionario_funciones:
+    for funcion in diccionario_funciones:
         
-         writer.writerow({'FUNCION': funcion . diccionario_funciones[funcion]['Modulo'] , 'Parámetros': diccionario_funciones[funcion]['Parámetros'], 'Líneas': diccionario_funciones[funcion]['Líneas'], 'Invocaciones': diccionario_funciones[funcion]['Invocaciones'][0], 'Returns':diccionario_funciones[funcion]['Returns'], 'If/Elif':diccionario_funciones[funcion]['If'], 'For':diccionario_funciones[funcion]['For'], 'While':diccionario_funciones[funcion]['While'], 'Break':diccionario_funciones[funcion]['Break'], 'Exit':diccionario_funciones[funcion]['Exit'], 'Coment':diccionario_funciones[funcion]['Coment'] , 'Ayuda':diccionario_funciones[funcion]['Ayuda'], 'Autor':diccionario_funciones[funcion]['Autor']  } )
-
-
+        writer.writerow({'FUNCION': funcion . diccionario_funciones[funcion]['Modulo'] , 'Parámetros': diccionario_funciones[funcion]['Parámetros'], 'Líneas': diccionario_funciones[funcion]['Líneas'], 'Invocaciones': diccionario_funciones[funcion]['Invocaciones'][0], 'Returns':diccionario_funciones[funcion]['Returns'], 'If/Elif':diccionario_funciones[funcion]['If'], 'For':diccionario_funciones[funcion]['For'], 'While':diccionario_funciones[funcion]['While'], 'Break':diccionario_funciones[funcion]['Break'], 'Exit':diccionario_funciones[funcion]['Exit'], 'Coment':diccionario_funciones[funcion]['Coment'] , 'Ayuda':diccionario_funciones[funcion]['Ayuda'], 'Autor':diccionario_funciones[funcion]['Autor']  } )
+    
     return 
 
 
@@ -174,7 +175,7 @@ def panel_de_funciones(fuente_unico, comentarios):
 
 
 #Main
-import csv
+
 fuente_unico= open('fuente_unico.csv','r' )
 
 comentarios= open('comentaios.csv','r' )
