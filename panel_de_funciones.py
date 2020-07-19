@@ -168,17 +168,19 @@ def longitud_caracteres(lista):
     """
     longitud=[]
 
-    for i in lista:
+    for i in range(0,len(lista)):
         longitud.append(len(lista[i])+2)
     
     return longitud
 
 
-def panel_de_funciones(fuente_unico, comentarios):
+
+
+def panel_de_funciones(archivo, fuente_unico, comentarios):
     
     """[Autor: Daniela Bolivar]
-       [Ayuda: Dados los archivos fuente_unico.csv y comentarios.csv se crea un archivo csv 
-       que contiene la información de cada una de las funciones]
+       [Ayuda: Dados los archivos fuente_unico.csv y comentarios.csv se escribe sobre un "archivo" csv 
+        la información de cada una de las funciones]
     """
     #Creo el diccionario que analiza ambos archivos csv a la vez
     diccionario_funciones=analisis_comentarios_funciones(analisis_codigo_funciones(fuente_unico),comentarios)
@@ -193,22 +195,26 @@ def panel_de_funciones(fuente_unico, comentarios):
     #En los demás campos del diccionario, se obtendrán números, por eso bastará con que la longitud de la
     #columna se restrinja a la longitud del título
 
-    columnas=[Parámetros, Líneas, Invocaciones, Returns, If/Elif, For, While, Break, Exit, Coment, Ayuda]
+    columnas=['Parámetros', 'Líneas', 'Invocaciones', 'Returns', 'If/Elif', 'For', 'While', 'Break', 'Exit', 'Coment', 'Ayuda']
 
     longitud=longitud_caracteres(columnas)
 
 
-    #En el archivo csv escribo el título de las columnas y los dejo centrados
-    writer.writerow('{:^n}{:^longitud[0]}{:^longitud[1]}{:^longitud[2]}{:^longitud[3]}{:^longitud[4]}{:^longitud[5]}{:^longitud[6]}{:^longitud[7]}{:^longitud[8]}{:^longitud[9]}{:^longitud[10]}{:^m}'.format('FUNCION', 'Parámetros', 'Líneas', 'Invocaciones', 'Returns', 'If/Elif', 'For', 'While', 'Break', 'Exit', 'Coment', 'Ayuda', 'Autor'))
+    #En el archivo csv escribo el título de las columnas y a la vez los imprimo por pantalla los dejo centrados
+    print('{:^n}{:^longitud[0]}{:^longitud[1]}{:^longitud[2]}{:^longitud[3]}{:^longitud[4]}{:^longitud[5]}{:^longitud[6]}{:^longitud[7]}{:^longitud[8]}{:^longitud[9]}{:^longitud[10]}{:^m}'.format('FUNCION', 'Parámetros', 'Líneas', 'Invocaciones', 'Returns', 'If/Elif', 'For', 'While', 'Break', 'Exit', 'Coment', 'Ayuda', 'Autor'))
     
+    archivo.write('{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format('FUNCION', 'Parámetros', 'Líneas', 'Invocaciones', 'Returns', 'If/Elif', 'For', 'While', 'Break', 'Exit', 'Coment', 'Ayuda', 'Autor'))
 
-    #Escribo el archivo csv, donde cada línea corresponde al análisis de una función
+    #Escribo el archivo csv, donde cada línea corresponde al análisis de una función y a la vez los imprimo el análisis por pantalla
     for funcion in diccionario_funciones:
 
-        writer.writerow('{:^n}{:^longitud[0]}{:^longitud[1]}{:^longitud[2]}{:^longitud[3]}{:^longitud[4]}{:^longitud[5]}{:^longitud[6]}{:^longitud[7]}{:^longitud[8]}{:^longitud[9]}{:^longitud[10]}{:^m}'.format( diccionario_funciones[funcion]['Funcion.Modulo'] , diccionario_funciones[funcion]['Parámetros'], diccionario_funciones[funcion]['Líneas'], diccionario_funciones[funcion]['Invocaciones'][0], diccionario_funciones[funcion]['Returns'], diccionario_funciones[funcion]['If'], diccionario_funciones[funcion]['For'], diccionario_funciones[funcion]['While'], diccionario_funciones[funcion]['Break'], diccionario_funciones[funcion]['Exit'], diccionario_funciones[funcion]['Coment'] , diccionario_funciones[funcion]['Ayuda'], diccionario_funciones[funcion]['Autor'] ))
+        print('{:^n}{:^longitud[0]}{:^longitud[1]}{:^longitud[2]}{:^longitud[3]}{:^longitud[4]}{:^longitud[5]}{:^longitud[6]}{:^longitud[7]}{:^longitud[8]}{:^longitud[9]}{:^longitud[10]}{:^m}'.format( diccionario_funciones[funcion]['Funcion.Modulo'] , diccionario_funciones[funcion]['Parámetros'], diccionario_funciones[funcion]['Líneas'], diccionario_funciones[funcion]['Invocaciones'][0], diccionario_funciones[funcion]['Returns'], diccionario_funciones[funcion]['If'], diccionario_funciones[funcion]['For'], diccionario_funciones[funcion]['While'], diccionario_funciones[funcion]['Break'], diccionario_funciones[funcion]['Exit'], diccionario_funciones[funcion]['Coment'] , diccionario_funciones[funcion]['Ayuda'], diccionario_funciones[funcion]['Autor'] ))
 
+        archivo.write('{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format( diccionario_funciones[funcion]['Funcion.Modulo'] , diccionario_funciones[funcion]['Parámetros'], diccionario_funciones[funcion]['Líneas'], diccionario_funciones[funcion]['Invocaciones'][0], diccionario_funciones[funcion]['Returns'], diccionario_funciones[funcion]['If'], diccionario_funciones[funcion]['For'], diccionario_funciones[funcion]['While'], diccionario_funciones[funcion]['Break'], diccionario_funciones[funcion]['Exit'], diccionario_funciones[funcion]['Coment'] , diccionario_funciones[funcion]['Ayuda'], diccionario_funciones[funcion]['Autor'] ))
 
     return 
+
+
 
 
 
@@ -219,7 +225,9 @@ fuente_unico= open('fuente_unico.csv','r' )
 
 comentarios= open('comentaios.csv','r' )
 
-panel_general= open('panel_general.csv','w', newline='' )
+panel_general= open('panel_general.csv','w')
+
+panel_de_funciones(panel_general, fuente_unico, comentarios)
 
 
 fuente_unico.close()
@@ -227,4 +235,3 @@ fuente_unico.close()
 comentarios.close()
 
 panel_general.close()
-
