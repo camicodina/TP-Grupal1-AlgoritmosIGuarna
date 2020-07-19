@@ -1,5 +1,3 @@
-import csv
-
 def diccionario_de_funciones(fuente_unico):
     """[Autor: Daniela Bolivar]
        [Ayuda: Crea un diccionario con las funciones del programa,
@@ -68,7 +66,7 @@ def invocacion_a_funcion(funcion,lista):
         invocacion_por_funcion=[lista[0],k]
 
     return invocacion_por_funcion
-            
+
 
 def analisis_codigo_funciones(fuente_unico):
     """[Autor: Daniela Bolivar]
@@ -147,29 +145,70 @@ def analisis_comentarios_funciones(diccionario_funciones,comentarios):
     return diccionario_funciones
 
 
-def panel_de_funciones(fuente_unico, comentarios):
+def longitud_columna(palabra,clave,diccionario):
     """[Autor: Daniela Bolivar]
-       [Ayuda: dados los archivos fuente_unico.csv y comentarios.csv se crea un archivo csv 
+       [Ayuda: Danda una palabra, comparo su longitud con la correspondiente a los elementos que se obtienen
+       del diccionario en la clave  ingresados.
+       La función devuelve el máximo número que se obtiene de estas comparaciones más dos]
+    """
+    n=len(palabra)
+
+    for funciones in diccionario: #Recorro el diccionario ingresado con la clave ingresada
+
+        if n<len(diccionario[funciones][clave]):
+            n=len(diccionario[funciones][clave])
+
+    return n+2
+
+
+def longitud_caracteres(lista):
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Danda una lista, obtengo la longitud de cada elemento de esta y le sumo dos, estos resultados son
+       guardados en otra lista que es devuelta por la función]
+    """
+    longitud=[]
+
+    for i in lista:
+        longitud.append(len(lista[i])+2)
+    
+    return longitud
+
+
+def panel_de_funciones(fuente_unico, comentarios):
+    
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Dados los archivos fuente_unico.csv y comentarios.csv se crea un archivo csv 
        que contiene la información de cada una de las funciones]
     """
-    columnas=[FUNCION, Parámetros, Líneas, Invocaciones, Returns, If/Elif, For, While, Break, Exit, Coment, Ayuda, Autor]
-
-    writer=csv.DictWriter(panel_general, fieldnames=columnas) #Creo un diccionario 
-
-    writer.writeheader() #Escribo el nombre de las columnas
-
-     #Creo el diccionario que analiza ambos archivos csv a la vez
+    #Creo el diccionario que analiza ambos archivos csv a la vez
     diccionario_funciones=analisis_comentarios_funciones(analisis_codigo_funciones(fuente_unico),comentarios)
 
-
-     #Escrivo un csv donde cada línea corresponde al análisis de una función
-    for funcion in diccionario_funciones:
-        
-        writer.writerow({'FUNCION': funcion . diccionario_funciones[funcion]['Modulo'] , 'Parámetros': diccionario_funciones[funcion]['Parámetros'], 'Líneas': diccionario_funciones[funcion]['Líneas'], 'Invocaciones': diccionario_funciones[funcion]['Invocaciones'][0], 'Returns':diccionario_funciones[funcion]['Returns'], 'If/Elif':diccionario_funciones[funcion]['If'], 'For':diccionario_funciones[funcion]['For'], 'While':diccionario_funciones[funcion]['While'], 'Break':diccionario_funciones[funcion]['Break'], 'Exit':diccionario_funciones[funcion]['Exit'], 'Coment':diccionario_funciones[funcion]['Coment'] , 'Ayuda':diccionario_funciones[funcion]['Ayuda'], 'Autor':diccionario_funciones[funcion]['Autor']  } )
+    #Los Campos 'FUNCION' y 'Autor' son los únicos campos del diccionario en los cuales la no se puede  
+    #predecir la longitud de caracteres que necesitará la columna, por eso se aplica la función 'longitud_columna()'
     
+    n=longitud_columna(FUNCION,'Funcion.Modulo',diccionario_funciones)
+
+    m=longitud_columna(Autor,'Autor',diccionario_funciones)
+
+    #En los demás campos del diccionario, se obtendrán números, por eso bastará con que la longitud de la
+    #columna se restrinja a la longitud del título
+
+    columnas=[Parámetros, Líneas, Invocaciones, Returns, If/Elif, For, While, Break, Exit, Coment, Ayuda]
+
+    longitud=longitud_caracteres(columnas)
+
+
+    #En el archivo csv escribo el título de las columnas y los dejo centrados
+    writer.writerow('{:^n}{:^longitud[0]}{:^longitud[1]}{:^longitud[2]}{:^longitud[3]}{:^longitud[4]}{:^longitud[5]}{:^longitud[6]}{:^longitud[7]}{:^longitud[8]}{:^longitud[9]}{:^longitud[10]}{:^m}'.format('FUNCION', 'Parámetros', 'Líneas', 'Invocaciones', 'Returns', 'If/Elif', 'For', 'While', 'Break', 'Exit', 'Coment', 'Ayuda', 'Autor'))
+    
+
+    #Escribo el archivo csv, donde cada línea corresponde al análisis de una función
+    for funcion in diccionario_funciones:
+
+        writer.writerow('{:^n}{:^longitud[0]}{:^longitud[1]}{:^longitud[2]}{:^longitud[3]}{:^longitud[4]}{:^longitud[5]}{:^longitud[6]}{:^longitud[7]}{:^longitud[8]}{:^longitud[9]}{:^longitud[10]}{:^m}'.format( diccionario_funciones[funcion]['Funcion.Modulo'] , diccionario_funciones[funcion]['Parámetros'], diccionario_funciones[funcion]['Líneas'], diccionario_funciones[funcion]['Invocaciones'][0], diccionario_funciones[funcion]['Returns'], diccionario_funciones[funcion]['If'], diccionario_funciones[funcion]['For'], diccionario_funciones[funcion]['While'], diccionario_funciones[funcion]['Break'], diccionario_funciones[funcion]['Exit'], diccionario_funciones[funcion]['Coment'] , diccionario_funciones[funcion]['Ayuda'], diccionario_funciones[funcion]['Autor'] ))
+
+
     return 
-
-
 
 
 
