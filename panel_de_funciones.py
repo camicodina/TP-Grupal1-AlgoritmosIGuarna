@@ -218,7 +218,7 @@ def panel_de_funciones(archivo, fuente_unico, comentarios):
 
 def generacion_archivo():
     """[Autor: Daniela Bolivar]
-       [Ayuda: Es ta función abre los archivos correspondientes, crea el archivo pedido e imprime la información]
+       [Ayuda: Esta función abre los archivos correspondientes, crea el archivo pedido e imprime la información]
     """
     fuente_unico= open('fuente_unico.csv','r' )
 
