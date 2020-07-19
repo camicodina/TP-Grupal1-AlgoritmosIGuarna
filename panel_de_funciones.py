@@ -57,7 +57,7 @@ def invocacion_a_funcion(funcion,lista):
         
         if funcion in lista[i]:
             #Cuento la cantidad de veces que la función 'x' es invocada por la función 'y'      
-            k+=1
+             k+=1
     
     #si la función 'x' fue invocada, genero una lista 
     # donde la primer componente es el nombre de la función 'y' y la segunda componente las veces que las veces que fue invocada la función 'x' 
@@ -97,14 +97,14 @@ def analisis_codigo_funciones(fuente_unico):
 
         #Completo el diccionario
         diccionario_funciones[lista[0]]['Módulo']=lista[2]
-        diccionario_funciones[lita[0]]['Parámetros']=len(lista[1])
-        diccionario_funciones[lita[0]]['Líneas']=len(lista)-3
-        diccionario_funciones[lita[0]]['Returns']=funcion_codigo(lista)[0]
-        diccionario_funciones[lita[0]]['If']=funcion_codigo(lista)[1]
-        diccionario_funciones[lita[0]]['For']=funcion_codigo(lista)[2]
-        diccionario_funciones[lita[0]]['While']=funcion_codigo(lista)[3]
-        diccionario_funciones[lita[0]]['Break']=funcion_codigo(lista)[4]
-        diccionario_funciones[lita[0]]['Exit']=funcion_codigo(lista)[5]
+        diccionario_funciones[lista[0]]['Parámetros']=len(lista[1])
+        diccionario_funciones[lista[0]]['Líneas']=len(lista)-3
+        diccionario_funciones[lista[0]]['Returns']=funcion_codigo(lista)[0]
+        diccionario_funciones[lista[0]]['If']=funcion_codigo(lista)[1]
+        diccionario_funciones[lista[0]]['For']=funcion_codigo(lista)[2]
+        diccionario_funciones[lista[0]]['While']=funcion_codigo(lista)[3]
+        diccionario_funciones[lista[0]]['Break']=funcion_codigo(lista)[4]
+        diccionario_funciones[lista[0]]['Exit']=funcion_codigo(lista)[5]
 
     return diccionario_funciones
 
@@ -136,12 +136,12 @@ def analisis_comentarios_funciones(diccionario_funciones,comentarios):
 
     for linea in comentarios: #Recorro línea por línea comentarios.csv
 
-        funcion_comentarios(linea)
+        lista=funcion_comentarios(linea)
 
         diccionario_funciones[lista[0]]['Coment']=funcion_comentarios(linea)[0]
-        diccionario_funciones[lita[0]]['Ayuda']=funcion_comentarios(linea)[1]
-        diccionario_funciones[lita[0]]['Autor']=funcion_comentarios(linea)[2]
-
+        diccionario_funciones[lista[0]]['Ayuda']=funcion_comentarios(linea)[1]
+        diccionario_funciones[lista[0]]['Autor']=funcion_comentarios(linea)[2]
+        
     return diccionario_funciones
 
 
@@ -188,9 +188,9 @@ def panel_de_funciones(archivo, fuente_unico, comentarios):
     #Los Campos 'FUNCION' y 'Autor' son los únicos campos del diccionario en los cuales la no se puede  
     #predecir la longitud de caracteres que necesitará la columna, por eso se aplica la función 'longitud_columna()'
     
-    n=longitud_columna(FUNCION,'Funcion.Modulo',diccionario_funciones)
+    n=longitud_columna('FUNCION','Funcion.Modulo',diccionario_funciones)
 
-    m=longitud_columna(Autor,'Autor',diccionario_funciones)
+    m=longitud_columna('Autor','Autor',diccionario_funciones)
 
     #En los demás campos del diccionario, se obtendrán números, por eso bastará con que la longitud de la
     #columna se restrinja a la longitud del título
