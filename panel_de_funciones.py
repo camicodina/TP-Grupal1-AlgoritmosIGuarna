@@ -16,8 +16,7 @@ def funcion_codigo(lista):
        [Ayuda: Dada una línea, analiza el código perteneciente a la función que se encuentra en ella.
        Es decir, la cantidad de 'returns', 'if', 'for','while', 'breaks', 'exit']
     """
-    # Como estamos trabajando con funciones, por definición sólo puede haber un return
-    c_returns=1 
+    c_returns=0 
     c_if=0
     c_for=0
     c_while=0
@@ -40,7 +39,9 @@ def funcion_codigo(lista):
         elif 'exit' in lista[i]:
             c_exit+=1
         
-
+        elif 'return 'in lista[i]:
+            c_returns+=1
+        
     return [c_returns, c_if, c_for, c_while, c_break, c_exit]
 
 
@@ -215,23 +216,26 @@ def panel_de_funciones(archivo, fuente_unico, comentarios):
     return 
 
 
+def generacion_archivo():
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Es ta función abre los archivos correspondientes, crea el archivo pedido e imprime la información]
+    """
+    fuente_unico= open('fuente_unico.csv','r' )
+
+    comentarios= open('comentaios.csv','r' )
+
+    panel_general= open('panel_general.csv','w')
+
+    panel_de_funciones(panel_general, fuente_unico, comentarios)
 
 
+    fuente_unico.close()
+
+    comentarios.close()
+
+    panel_general.close()
+
+    return
 
 
-#Main
-
-fuente_unico= open('fuente_unico.csv','r' )
-
-comentarios= open('comentaios.csv','r' )
-
-panel_general= open('panel_general.csv','w')
-
-panel_de_funciones(panel_general, fuente_unico, comentarios)
-
-
-fuente_unico.close()
-
-comentarios.close()
-
-panel_general.close()
+generacion_archivo()
