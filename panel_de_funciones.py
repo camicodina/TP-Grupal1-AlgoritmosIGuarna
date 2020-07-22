@@ -50,24 +50,16 @@ def invocacion_a_funcion(funcion,lista):
     """[Autor: Daniela Bolivar]
        [Ayuda: Dada una función 'x' del programa, se analiza si ésta invoca a otra función 'y']
     """
-
-    invocacion_por_funcion=0
-    
+ 
     k=0
 
     for i in range(3,len(lista)):
         
             if funcion in lista[i]:
             #Cuento la cantidad de veces que la función 'x' es invocada por la función 'y'      
-             k+=1
-    
-    #si la función 'x' fue invocada, genero una lista 
-    # donde la primer componente es el nombre de la función 'y' y la segunda componente las veces que las veces que fue invocada la función 'x' 
-    if k!=0: 
+             k+=1    
 
-        invocacion_por_funcion=k
-
-    return invocacion_por_funcion
+    return k
 
 
 def cantidad_parametros_codigo(lista):
