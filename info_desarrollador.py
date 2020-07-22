@@ -1,7 +1,6 @@
-
 def diccionario_autores_funciones(comentarios):
     """[Autor: Daniela Bolivar]
-       [Ayuda: Crea un diccionario con los autores de cada función, a la vez crea un subdiccionario 
+       [Ayuda: Crea un diccionario con los autores de cada función. A la vez crea un subdiccionario 
        con las funciones creadas por el autor, y características vacías de cada función.
        A las funciones que no tengan un autor cargado, se le asignará el autor 'Anónimo' ]
     """
@@ -29,7 +28,7 @@ def diccionario_autores_funciones(comentarios):
 
 def encuentro_funcion_autor(lista, diccionario):
     """[Autor: Daniela Bolivar]
-       [Ayuda: Dada una lista, y el diccionario creado en 'diccionario_autores_funciones(comentarios)', se busca
+       [Ayuda: Dada una lista y el diccionario creado en 'diccionario_autores_funciones(comentarios)' se busca
        a qué autor pertenece la lista ingresada]
     """
     
@@ -39,6 +38,25 @@ def encuentro_funcion_autor(lista, diccionario):
             autor=nombre
     
     return autor
+
+def lineas_de_codigo(lista):
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Esta función se utilizará para contar las líneas de código de una función por eso es que se analiza
+       a partir de la componente 1 de la lista]
+    """
+    T=True
+    k=1
+    while T and k< len(lista):
+        if ')' in lista[k]:
+            T=False
+                  
+        if '()' in lista[k]:
+            T=False
+            
+        k+=1
+    #Se le suma 1 a la resta porque la tercera componente es el módulo
+    k=len(lista)-(k+1)
+    return k      
 
 
 def analisis_cantidad_lineas(fuente_unico, comentarios):
@@ -59,9 +77,9 @@ def analisis_cantidad_lineas(fuente_unico, comentarios):
         #Completo el diccionario
         autor = encuentro_funcion_autor(lista, diccionario_autores)
 
-        diccionario_autores[autor]['Líneas'].append(len(lista)-3)
+        diccionario_autores[autor]['Líneas'].append(lineas_de_codigo(lista))
 
-        diccionario_autores[autor]['Líneas Totales']+= len(lista)-3
+        diccionario_autores[autor]['Líneas Totales']+= lineas_de_codigo(lista)
 
         n+=len(lista)-3
     
@@ -69,11 +87,19 @@ def analisis_cantidad_lineas(fuente_unico, comentarios):
         diccionario_autores[autor]['Porcentaje']= diccionario_autores[autor]['Líneas Totales']/n
         diccionario_autores[autor]['Cantidad Funciones']= len(diccionario_autores[autor]['Función'])
 
-    # Ordeno el diccionario por porcentaje de escrituras de código
-    diccionario_porcentajes=sorted(diccionario_autores.items, key=lambda x: x[autor]['Porcentaje'], reverse=True)
+    return diccionario_autores
 
+def lista_autores(diccionario):
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Dado un diccionario se obtendrá una lista ordenada de mayor a menor según el procentaje]
+    """
+    autores_ordenados=[]
+    lista=sorted(diccionario.items(), key=lambda x: x[1]['Porcentaje'], reverse=True)
 
-    return diccionario_porcentajes
+    for autor in lista:
+        autores_ordenados.append(autor[0])
+    
+    return autores_ordenados
 
 
 def longitud_de_funciones(diccionario):
@@ -103,6 +129,8 @@ def creacion_informe(archivo,fuente_unico, comentarios):
 
     diccionario_autores=analisis_cantidad_lineas(fuente_unico, comentarios)
 
+    autores_ordenados=lista_autores(diccionario_autores)
+
     n=longitud_de_funciones(diccionario_autores)+2
 
     m=n+11
@@ -111,8 +139,8 @@ def creacion_informe(archivo,fuente_unico, comentarios):
 
     archivo.write(' '*4,'Informe de Desarrollo por Autor')
 
-    for autor in diccionario_autores:
-        
+    for autor in autores_ordenados:
+        #Recorro la lista y a partir de esta obtengo los valores correspondientes a las claves del diccionario
 
         print('\n','Autor: '+ autor,'\n')
         archivo.write('\n','Autor: '+ autor,'\n')
