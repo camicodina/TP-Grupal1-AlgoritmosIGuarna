@@ -1,11 +1,11 @@
-from consulta_de_funciones import listar_funciones
+from consulta_de_funciones import listar_funente_unico
 
 def leer_archivo(archivo):
     """[Autor: Mateo Villarinos]
        [Ayuda: funcion que toma un modulo para devolver un diccionario con el nombre de las funciones
        y como valor en la cantidad de lineas y las invocaciones]
     """
-    diccionario_de_funciones = listar_funciones()
+    diccionario_de_funciones = listar_fuente_unico()
     lista_key = list(diccionario_de_funciones.keys())
     for linea in archivo:
         lista_linea = linea.rstrip("\n").split(",")
