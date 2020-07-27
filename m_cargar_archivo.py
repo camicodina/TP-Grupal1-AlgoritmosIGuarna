@@ -1,7 +1,7 @@
 
 def solicitar_archivo():
     #ruta_archivo_fuente = input('solicitar la ruta del archivo:')
-    archivo_fuente = open(r'.\programa_prueba\programas.txt','r')
+    archivo_fuente = open('programas.txt','r')
 
     return archivo_fuente
 

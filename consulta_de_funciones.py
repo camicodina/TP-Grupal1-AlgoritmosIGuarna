@@ -120,19 +120,20 @@ def crear_ayuda_funciones(comentarios_funciones,fuente_unico_funciones,nombres_f
     """[Autor: Camila Codina]
        [Ayuda: Crea archivo ayuda_funciones.txt con info de ?todo]
     """
-    llamado_todo = signo_pregunta_todo(comentarios_funciones,fuente_unico_funciones,nombres_funciones_ordenadas)
+    for i in nombres_funciones_ordenadas:
+        signo_pregunta(comentarios_funciones,fuente_unico_funciones, i)
+    # llamado_todo = signo_pregunta_todo(comentarios_funciones,fuente_unico_funciones,nombres_funciones_ordenadas)
     with open('ayuda_funciones.txt','w') as crear_ayuda:
         for x in llamado_todo:
             for i in nombres_funciones_ordenadas:
-                crear_ayuda.write("-------------------------------")
                 crear_ayuda.write(i)
-                crear_ayuda.write("Ayuda:")
+                crear_ayuda.write("\n Ayuda:")
                 crear_ayuda.write(x[i][0])
-                crear_ayuda.write("Parámetros:")
+                crear_ayuda.write("\n Parámetros:")
                 crear_ayuda.write(x[i][1])
-                crear_ayuda.write("Módulo:")
+                crear_ayuda.write("\n Módulo:")
                 crear_ayuda.write(x[i][2])
-                crear_ayuda.write("Autor:")
+                crear_ayuda.write("\n Autor:")
                 crear_ayuda.write(x[i][3])
                 crear_ayuda.write("-------------------------------")    
     return

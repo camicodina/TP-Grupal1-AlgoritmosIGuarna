@@ -1,4 +1,4 @@
-from consulta_de_funciones import listar_funente_unico
+from consulta_de_funciones import listar_fuente_unico
 
 def leer_archivo(archivo):
     """[Autor: Mateo Villarinos]

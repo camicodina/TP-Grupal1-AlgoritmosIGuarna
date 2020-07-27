@@ -168,7 +168,7 @@ def generacion_participacion():
     """
     fuente_unico= open('fuente_unico.csv','r' )
      
-    comentarios= open('comentaios.csv','r' )
+    comentarios= open('comentarios.csv','r' )
 
     participacion= open('participacion.txt','w')
 
