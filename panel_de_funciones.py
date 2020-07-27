@@ -57,7 +57,8 @@ def invocacion_a_funcion(funcion,lista):
         
             if funcion in lista[i]:
             #Cuento la cantidad de veces que la función 'x' es invocada por la función 'y'      
-             k+=1    
+             k+=1
+    
 
     return k
 
@@ -79,9 +80,36 @@ def cantidad_parametros_codigo(lista):
             T=False
             n=0
         k+=1
-    #Se le suma 1 a la resta porque la tercera componente es el módulo
-    k=len(lista)-(k+1)
-    return n,k            
+        
+    return n   
+
+def cantidad_lineas_codigo(n,lista):
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Esta función se utilizará para contar las líneas de código de una función]
+    """
+    inico_p= False
+    
+    k=0
+    for i in lista[n+2:]:
+        if '(' in i and not ')' in i:
+            inico_p= True
+
+        if ')' in i and not '(' in i:
+            inico_p= False
+            
+
+        if inico_p :
+
+            k+=1
+    
+    if n==0:
+        k= len(lista[n+2:])-k-1
+
+    else:
+        k=len(lista[n+2:])-k
+
+    return k 
+         
 
 def analisis_codigo_funciones(fuente_unico):
     """[Autor: Daniela Bolivar]
@@ -112,8 +140,8 @@ def analisis_codigo_funciones(fuente_unico):
 
         #Completo el diccionario
         diccionario_funciones[lista[0]]['Funcion.Módulo']=str(lista[0])+'.'+str(lista[2])
-        diccionario_funciones[lista[0]]['Parámetros']=cantidad_parametros_codigo(lista)[0]
-        diccionario_funciones[lista[0]]['Líneas']=cantidad_parametros_codigo(lista)[1]
+        diccionario_funciones[lista[0]]['Parámetros']=cantidad_parametros_codigo(lista)
+        diccionario_funciones[lista[0]]['Líneas']=cantidad_lineas_codigo(cantidad_parametros_codigo(lista),lista)
         diccionario_funciones[lista[0]]['Returns']=funcion_codigo(lista)[0]
         diccionario_funciones[lista[0]]['If']=funcion_codigo(lista)[1]
         diccionario_funciones[lista[0]]['For']=funcion_codigo(lista)[2]
@@ -124,6 +152,30 @@ def analisis_codigo_funciones(fuente_unico):
     return diccionario_funciones
 
 
+def autores(nombre):
+    x=nombre.find(':')+2
+    autor=nombre[x:-1]
+
+    return autor
+
+
+def cantidad_comentarios(lista):
+    k=2
+    ayuda=True
+    if lista[k]=='' or  ']' in lista[k]:
+            ayuda=False
+    
+    while ayuda and k<len(lista):    
+        k+=1
+        if ']' in lista[k]:
+            ayuda=False
+            
+
+        
+    n=len(lista)-(k+1)
+
+    return n
+
 def funcion_comentarios(linea):
     """[Autor: Daniela Bolivar]
        [Ayuda: Dada una línea, analiza los comentarios pertenecientes a la función que se encuentra en ella.
@@ -132,12 +184,12 @@ def funcion_comentarios(linea):
 
     lista=linea.strip().split(',')
 
-    comentarios=len(lista)-3
+    comentarios=cantidad_comentarios(lista)
 
     if lista[1]==' ':
         autor='Anónimo'
     else:     
-        autor= lista[1]
+        autor= autor(lista[1])
 
     ayuda= 'Si'
     if lista[2]=='':
@@ -238,7 +290,7 @@ def generacion_archivo():
     """
     fuente_unico= open('fuente_unico.csv','r' )
 
-    comentarios= open('comentaios.csv','r' )
+    comentarios= open('comentarios.csv','r' )
 
     panel_general= open('panel_general.csv','w')
 
