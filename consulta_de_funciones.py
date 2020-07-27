@@ -178,9 +178,10 @@ def respuesta_input(funcion_input,pedido,fuente_unico_funciones,comentarios_func
 
 
 
-################### Bloque Principal ###################
-
 def consulta_de_funciones():
+    """[Autor: Camila Codina]
+       [Ayuda: Bloque Principal]
+    """
     comentarios_funciones,nombres_funciones_ordenadas = listar_comentarios()
     fuente_unico_funciones = listar_fuente_unico()
     crear_tabla(nombres_funciones_ordenadas)
