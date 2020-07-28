@@ -1,7 +1,11 @@
-from panel_de_funciones import autores
-from panel_de_funciones import cantidad_lineas_codigo
-from panel_de_funciones import cantidad_parametros_codigo
+def nombre_autores(nombre):
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Dado un sting lo corta, para obtener el nombre.]
+    """
+    x=nombre.find(':')+2
+    autor=nombre[x:-1]
 
+    return autor
 
 def diccionario_autores_funciones(comentarios):
     """[Autor: Daniela Bolivar]
@@ -20,7 +24,7 @@ def diccionario_autores_funciones(comentarios):
             autor='Anónimo'
 
         else:     
-            autor= autores(lista[1])
+            autor= nombre_autores(lista[1])
 
         if autor not in diccionario_autores:
             
@@ -48,6 +52,60 @@ def encuentro_funcion_autor(funcion, diccionario):
     
     return autor  
 
+def numero_parametros_codigo(lista):
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Esta función se utilizará para contar los parámetros de una función]
+    """
+    n=0
+    T=True
+    k=1
+    while T and k< len(lista):
+        if ')' in lista[k]:
+            T=False
+            
+        n+=1
+        if '()' in lista[k]:
+            T=False
+            n=0
+        k+=1
+        
+    return n   
+
+def numero_lineas_codigo(n,lista):
+    """[Autor: Daniela Bolivar]
+       [Ayuda: Esta función se utilizará para contar las líneas de código de una función]
+    """
+    inico_p= False
+    c_abierto=0
+    c_cerrado=0
+    k=0
+    
+    for i in lista[n+2:]:
+        c_abierto+=i.count('(')
+          
+        c_cerrado+=i.count(')') 
+
+        if c_abierto>c_cerrado :
+            inico_p= True
+
+        if c_abierto==c_cerrado:
+            inico_p= False
+            
+
+        if inico_p :
+            
+            k+=1
+                    
+    
+    if n==0:
+        k= len(lista[2:])-(k+1)
+        
+    else:
+        k=len(lista[n+2:])-k
+        
+
+    return k 
+
 
 def analisis_cantidad_lineas(fuente_unico, comentarios):
     """[Autor: Daniela Bolivar]
@@ -69,13 +127,13 @@ def analisis_cantidad_lineas(fuente_unico, comentarios):
         lista=linea.rstrip('\n').split(',') 
 
         #Completo el diccionario
-        autor = encuentro_funcion_autor(lista[0].replace('"', ''), diccionario_autores)
+        autor = encuentro_funcion_autor(lista[0], diccionario_autores)
 
-        diccionario_autores[autor]['Líneas'].append(cantidad_lineas_codigo(cantidad_parametros_codigo(lista),lista))
+        diccionario_autores[autor]['Líneas'].append(numero_lineas_codigo(numero_parametros_codigo(lista),lista))
 
-        diccionario_autores[autor]['Líneas Totales']+= cantidad_lineas_codigo(cantidad_parametros_codigo(lista),lista)
+        diccionario_autores[autor]['Líneas Totales']+= numero_lineas_codigo(numero_parametros_codigo(lista),lista)
 
-        n+=cantidad_lineas_codigo(cantidad_parametros_codigo(lista),lista)
+        n+=numero_lineas_codigo(numero_parametros_codigo(lista),lista)
     
     for autor in diccionario_autores:
         diccionario_autores[autor]['Porcentaje']= diccionario_autores[autor]['Líneas Totales']/n
@@ -133,30 +191,40 @@ def creacion_informe(archivo,fuente_unico, comentarios):
 
     m=n+16
 
+    f_total=0
+
+    l_total=0
+
     print(' '*4,'Informe de Desarrollo por Autor')
 
-    archivo.write(' '*4 +'Informe de Desarrollo por Autor')
+    archivo.write(' '*4 +'Informe de Desarrollo por Autor'+'\n')
 
     for autor in autores_ordenados:
         
 
         print('\n','Autor: '+ autor,'\n')
-        #archivo.write('\n','Autor: '+ autor,'\n')
+        archivo.write('\n'+'\n'+'Autor: '+ autor +'\n'+'\n')
 
         print(' '*7,'Funcion',' '*(n-len('Funcion')),'Líneas' )
-        #archivo.write(' '*7,'Funcion',' '*(n-len('Funcion')),'Líneas' )
+        archivo.write(' '*7 + 'Funcion'+ ' '*(n-len('Funcion')) +'Líneas' )
 
         print(' '*7,'-'*m )
-        #archivo.write(' '*7,'-'*m )
+        archivo.write('\n'+' '*7 + '-'*m +'\n')
 
         for i in range(0,len(diccionario_autores[autor]['Función'])):
 
             print(' '*7,diccionario_autores[autor]['Función'][i],' '*(n-len(diccionario_autores[autor]['Función'][i])),' '*(4-len(str(diccionario_autores[autor]['Líneas'][i]))),diccionario_autores[autor]['Líneas'][i])
-            #archivo.write(' '*7,diccionario_autores[autor]['Función'][i],' '*(n-len(diccionario_autores[autor]['Función'][i])),' '*(4-len(str(diccionario_autores[autor]['Líneas'][i]))),diccionario_autores[autor]['Líneas'][i])
+            archivo.write(' '*7 + str(diccionario_autores[autor]['Función'][i]) +' '*(n-len(diccionario_autores[autor]['Función'][i]))+ ' '*(4-len(str(diccionario_autores[autor]['Líneas'][i]))) + str(diccionario_autores[autor]['Líneas'][i])+'\n')
     
         print(' '*7,diccionario_autores[autor]['Cantidad Funciones'],' Funciones - Lineas',' '*(n-(len(' Funciones - Lineas')+len(str(diccionario_autores[autor]['Cantidad Funciones'])))),' '*(3-len(str(diccionario_autores[autor]['Líneas Totales']))),diccionario_autores[autor]['Líneas Totales'], ' ', '{:.2%}'.format(diccionario_autores[autor]['Porcentaje']), '\n')
-        #archivo.write(' '*7,diccionario_autores[autor]['Cantidad Funciones'],' Funciones - Lineas',' '*(n-(len(' Funciones - Lineas')+len(str(diccionario_autores[autor]['Cantidad Funciones'])))),' '*(3-len(str(diccionario_autores[autor]['Líneas Totales']))),diccionario_autores[autor]['Líneas Totales'], ' ', '{:.2%}'.format(diccionario_autores[autor]['Porcentaje']), '\n')
+        archivo.write(' '*7 + str(diccionario_autores[autor]['Cantidad Funciones']) + ' Funciones - Lineas'+ ' '*(n-(len(' Funciones - Lineas') + len(str(diccionario_autores[autor]['Cantidad Funciones'])))) + ' '*(4-len(str(diccionario_autores[autor]['Líneas Totales']))) + str(diccionario_autores[autor]['Líneas Totales']) + '     ' + '{:.2%}'.format(diccionario_autores[autor]['Porcentaje']) + '\n')
+
+        f_total+=diccionario_autores[autor]['Cantidad Funciones']
+        l_total+=diccionario_autores[autor]['Líneas Totales']
     
+    print('\n'+'Total: ', str(f_total) , 'Funciones - Lineas' , ' '*(n-(len('Funciones -Lineas')+len(str(diccionario_autores[autor]['Cantidad Funciones'])))) , l_total)
+    archivo.write('\n'+'Total: '+ str(f_total) + ' Funciones - Lineas' + ' '*(n-(len('Funciones - Lineas')+len(str(diccionario_autores[autor]['Cantidad Funciones'])))) + str(l_total))
+
     return
 
 
@@ -180,5 +248,12 @@ def generacion_participacion():
     participacion.close()
 
     return
+
+
+        
+
+
+
+
 
 

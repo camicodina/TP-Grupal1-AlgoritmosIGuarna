@@ -1,15 +1,23 @@
 def solicitar_archivo():
-    #ruta_archivo_fuente = input('solicitar la ruta del archivo:')
+    '''[Autor:Andres Guerrero]
+       [Ayuda:abre la ruta del archivo que se va a analizar] 
+    '''
     archivo_fuente = open(r'.\programa_prueba\programas.txt','r')
 
     return archivo_fuente
 
 def leer_linea_txt(archivo):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:lee linea del archivo que contiene las rutas] 
+    '''
     linea = archivo.readline()
     #Devuelve 1 string si la linea no tiene nada vacios
     return linea if linea else ('') 
     
 def calculo_nombre_modulo(ruta_modulo):
+    '''[Autor:Andres Guerrero]
+       [Ayuda: extraccion del nombre del modulo con el que se esta trabajando] 
+    '''
     division_ruta = ruta_modulo.split('\\')
     tamano_division_ruta = len(division_ruta)-1
     nombre_modulo = division_ruta[tamano_division_ruta].rstrip('.py')
@@ -17,6 +25,9 @@ def calculo_nombre_modulo(ruta_modulo):
     return nombre_modulo
 
 def validacion_funcion_inicial(linea_modulo):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:valida si la funcion a iniciado para abrir el ciclo] 
+    '''
     validacion_inicio = False
     if linea_modulo.startswith('def '):
         validacion_inicio = True 
@@ -24,6 +35,9 @@ def validacion_funcion_inicial(linea_modulo):
     return validacion_inicio
 
 def validacion_funcion_final(validacion_final,linea_modulo,archivo_modulo,nombre_funcion):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:busca si a finalizado la funcion para darle cierre al ciclo] 
+    '''
     validacion_final = True
 
     if linea_modulo.startswith('    return'):
@@ -40,6 +54,9 @@ def validacion_funcion_final(validacion_final,linea_modulo,archivo_modulo,nombre
     return validacion_final
 
 def calculo_nombre_parametros_funcion(linea_modulo):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:extrae de la primera linea de funcion su nombre y parametros] 
+    '''
     nombre_funcion = ''
     parametros = ''
     if linea_modulo.startswith('def '):
@@ -52,6 +69,10 @@ def calculo_nombre_parametros_funcion(linea_modulo):
     return nombre_funcion,parametros
 
 def crear_funcion(linea_modulo,funciones,nombre_modulo):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:abre una nueva clave para cada funcion que se va encontrando en el codigo
+       y lo guarda en un diccionario] 
+    '''
     autor = ''
     ayuda = ''
     comentario_simple = ''
@@ -63,7 +84,10 @@ def crear_funcion(linea_modulo,funciones,nombre_modulo):
 
     return nombre_funcion
         
-def extraccion_corchetes(linea_comentario,archivo_modulo): # extrae lo que este entre corchetes sea el autor o ayuda
+def extraccion_corchetes(linea_comentario,archivo_modulo): 
+    '''[Autor:Andres Guerrero]
+       [Ayuda:extrae lo que este entre corchetes sea el autor o ayuda] 
+    '''
     extraccion = ''
     pos = linea_comentario.find('[') # posicion del primer corchete
     linea_nueva = linea_comentario[pos:].replace('\n',' ') # le quito el salto de linea a la linea de comentario
@@ -89,6 +113,10 @@ def extraccion_corchetes(linea_comentario,archivo_modulo): # extrae lo que este 
     return extraccion,linea_nueva
     
 def calculo_comentario_multiples(linea_modulo,funciones,nombre_funcion,archivo_modulo):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:diferencia si es un comentario multiple y ahi elige si es un autor,
+       ayuda o linea simple y guarda en el diccionario, con su clave respectiva] 
+    '''
     c_multiple = '"""' 
     linea_comentario = linea_modulo
 
@@ -109,6 +137,10 @@ def calculo_comentario_multiples(linea_modulo,funciones,nombre_funcion,archivo_m
                 c_multiple_cierre = False
 
 def lineas_restantes(funciones,linea_modulo,nombre_funcion):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:guarda una linea que no este en comentario multiple, es decir del codigo y
+       selecciona la parte del comentario simple y la de codigo] 
+    '''
     nueva_linea = linea_modulo.replace('\n','')
     linea_codigo_vacia = linea_modulo.replace('\n','').strip(' ')
     
@@ -126,6 +158,9 @@ def lineas_restantes(funciones,linea_modulo,nombre_funcion):
         funciones[nombre_funcion][5] += linea_codigo
 
 def ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta_funciones):
+    '''[Autor:Andres Guerrero]
+        [Ayuda:ordena y guarda en un archivo intermedio lo relativo a la funcion] 
+    '''
     lista_modulo_ordenada = sorted(funciones.items(), key = lambda tupla : tupla[0] , reverse=False)
     fh_modulo = open('m_' + nombre_modulo + '.csv','w')
     archivo_ruta_funciones.write('m_' + nombre_modulo + '.csv' + '\n')
@@ -142,6 +177,10 @@ def ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta
     archivo_modulo.close()
 
 def funciones_por_modulo(archivo_fuente):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:estructura que se encarga de cargar y hacer los cortes por rutas de los modulos,
+       modulo en el que se trabaja,funcion_analizada] 
+    '''
     #retorna una lista ordenado alfabeticamente por funciones
     ruta_modulo = leer_linea_txt(archivo_fuente).rstrip('\n')
     archivo_ruta_funciones = open('archivo_rutas_funciones.txt','w')
@@ -178,6 +217,9 @@ def funciones_por_modulo(archivo_fuente):
 
 
 def apertura_archivos():
+    '''[Autor:Andres Guerrero]
+       [Ayuda:abre los archivos guardados en un txt con las ruta de los archivos intermedios] 
+    '''
 
     ruta_modulos_ordenados = open('archivo_rutas_funciones.txt','r')
     lista_archivos = []
@@ -190,16 +232,25 @@ def apertura_archivos():
     return lista_archivos
 
 def cerrado_archivos(lista_archivos):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:cierra los archivos intermedios] 
+    '''
     for archivos in lista_archivos:
         archivos.close()
 
 
 def leer_linea_mezcla(archivo, default):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:lee una linea de los archivos que se esta mezclando] 
+    '''
     linea = archivo.readline()
     return linea.rstrip('\n').split(',&') if linea else default
 
 
 def leer_lineas_archivos(lista_archivos,default):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:lee las lineas de cada uno de los archivos] 
+    '''
 
     lista_lineas = []
 
@@ -210,6 +261,9 @@ def leer_lineas_archivos(lista_archivos,default):
     return lista_lineas
 
 def validar_fin_lineas(lista_lineas,Fin):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:adentro de la parte de mezcla naliza cual de las lineas a llegado al fin] 
+    '''
     
     validar = False
     cont_fin = 0 # cantidad de archivos que llegaron al fin
@@ -224,15 +278,12 @@ def validar_fin_lineas(lista_lineas,Fin):
 
     return validar 
 
-def calculo_nombres(lista_lineas):
-    lista_nombres = []
-
-    for nombre_funcion in lista_lineas:
-        lista_nombres.append(nombre_funcion)
-
-    return lista_nombres
 
 def escritura_archivos(nombre_menor,a_comentario,fuente_unico):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:al conseguir la funcion que es la menor entre todas graba los campos en 
+       comentarios.csv y fuente_unico.csv] 
+    '''
 
     nombre_funcion = nombre_menor[0]
     parametros = nombre_menor[1]
@@ -259,6 +310,10 @@ def escritura_archivos(nombre_menor,a_comentario,fuente_unico):
 
 
 def calculo_nueva_lista_linea(lista_lineas,nombre_menor,default,lista_archivos):
+    '''[Autor:Andres Guerrero]
+       [Ayuda:ve cual linea fue usada y se trae una nueva linea de ese archivo para 
+       actualizar las lineas a analizar de cada archivo] 
+    '''
     i=0
     nombre_comparativo = lista_lineas[i][0]
     nombre = nombre_menor[0]
@@ -273,6 +328,10 @@ def calculo_nueva_lista_linea(lista_lineas,nombre_menor,default,lista_archivos):
 
 
 def mezcla(lista_archivos):
+    '''[Autor:Andres Guerrero]
+       [Ayuda: realiza un ciclo que busca el minimo entre los n archivos y graba comentario.csv 
+       y fuente_unico.csv] 
+    '''
     Fin = 'zzzzzz9999'
     default = [Fin,'','','','','','']
     archivo_comentario = open('comentarios.csv','w')
@@ -289,21 +348,18 @@ def mezcla(lista_archivos):
 
 
 def mezcla_archivos_intermedios():
+    '''[Autor:Andres Guerrero]
+       [Ayuda: estructura main de la mezcla] 
+    '''
     lista_archivos = apertura_archivos()
     mezcla(lista_archivos)
     cerrado_archivos(lista_archivos)
 
 def cargar_archivo():
+    '''[Autor:Andres Guerrero]
+       [Ayuda:estructura main del modulo] 
+    '''
     archivo_fuente = solicitar_archivo()
     funciones_por_modulo(archivo_fuente)
     mezcla_archivos_intermedios()
 
-
-
-
-
-
-
-
-
-# Numero de Legajo ---------105692-----------

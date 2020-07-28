@@ -336,6 +336,3 @@ def generacion_archivo():
     panel_general.close()
 
     return
-
-
-

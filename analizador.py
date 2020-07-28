@@ -27,7 +27,7 @@ def invocacion_a_funcion(funcion,lista):
             #Cuento la cantidad de veces que la función 'x' es invocada por la función 'y'      
              k+=1
     
-    #si la función 'x' fue invocada, genero una lista 
+    #si la función 'x' fue invocada genero una lista 
     # donde la primer componente es el nombre de la función 'y' y la segunda componente las veces que las veces que fue invocada la función 'x' 
     if k!=0: 
 
@@ -103,14 +103,14 @@ def generacion_fila(n, funcion, diccionario):
     fila[0]=str(diccionario[funcion]['Columna']) + ' - '+ funcion #Cambio la primer componente por el número y nombre de la función
 
     for j in range(len(diccionario[funcion]['Invoca'])):
-        #Obtengo el número del la función que es invocada por la fila
+        #Obtengo el número de la función que es invocada por la fila
         k=diccionario[diccionario[funcion]['Invoca'][j][0]]['Columna']
 
-        #En la fi
+        #En la componente k de la fila escribo el número de invocaciones
         fila[k]=str(diccionario[funcion]['Invoca'][j][1])+' '*(2-len(str(diccionario[funcion]['Invoca'][j][1])))
 
     for l in range(len(diccionario[funcion]['Llamada'])):
-
+        #Obtengo el número del la función que invoca a la fila
         m=diccionario[diccionario[funcion]['Llamada'][l]]['Columna']
 
         fila[m]= 'X '
@@ -158,16 +158,18 @@ def longitud_primera_columna(diccionario):
 
 def creacion_tabla(fuente_unico):
     """[Autor: Daniela Bolivar]
-       [Ayuda: Dada una función 'x' del programa, se analiza si ésta invoca a otra función 'y']
+       [Ayuda: A partir de la información obtenida en diccionario de funciones, se creará una lista de listas
+       donde se volcará toda la información]
     """
     fuente_unico= open('fuente_unico.csv','r' )
     diccionario_funciones=analisis_codigo_funciones(fuente_unico)
 
     k=longitud_primera_columna(diccionario_funciones[1])
 
-    
+    #Genero el encabezado
     tabla=[encabezado(diccionario_funciones[0])]
     
+    #Como es una lista de listas modifico la primer componente de de la primera lista
     tabla[0][0]=tabla[0][0]+ ' '*(k+3-len(tabla[0][0]))
 
     for funcion in diccionario_funciones[1]:
@@ -185,9 +187,9 @@ def creacion_tabla(fuente_unico):
     return tabla
 
 
-def imprimir(archivo,fuente_unico):
+def imprimir_crear(archivo,fuente_unico):
     """[Autor: Daniela Bolivar]
-       [Ayuda: Dada una función 'x' del programa, se analiza si ésta invoca a otra función 'y']
+       [Ayuda: Imprime la tabla y genera el archivo txt pedido]
     """
     tabla= creacion_tabla(fuente_unico)
 
@@ -195,10 +197,10 @@ def imprimir(archivo,fuente_unico):
         fila=' | '.join(lista)
 
         print(fila + '|')
-        archivo.write(fila + '|')
+        archivo.write(fila +'|'+'\n')
 
         print('-'*(len(fila)+2))
-        archivo.write(fila + '|')
+        archivo.write('-'*(len(fila)+2)+'\n')
     
     return
 
@@ -206,14 +208,14 @@ def imprimir(archivo,fuente_unico):
 
 def generar_analizador():
     """[Autor: Daniela Bolivar]
-       [Ayuda: Dada una función 'x' del programa, se analiza si ésta invoca a otra función 'y']
+       [Ayuda: abre los archivos a analizar y genera el archivos e impresión pedidos]
     """
 
     fuente_unico= open('fuente_unico.csv','r' )
 
     analizador=open('analizador.txt', 'w')
 
-    imprimir(analizador,fuente_unico)
+    imprimir_crear(analizador,fuente_unico)
 
     fuente_unico.close()
 
@@ -221,5 +223,3 @@ def generar_analizador():
 
 
     return
-
-
