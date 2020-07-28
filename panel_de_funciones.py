@@ -226,7 +226,7 @@ def analisis_comentarios_funciones(diccionario_funciones,comentarios):
        El análisis será cargado a un diccionario que se le entrega a la función.]
     """
     
-    comentarios= open('C:\\Users\\dany_\\Downloads\\Algoritmos\\Trabajo Práctico\\Final\\comentarios.csv','r' )
+    comentarios= open('comentarios.csv','r' )
     i=0
     for linea in comentarios: #Recorro línea por línea comentarios.csv
 
@@ -320,9 +320,9 @@ def generacion_archivo():
     """[Autor: Daniela Bolivar]
        [Ayuda: Esta función abre los archivos correspondientes, crea el archivo pedido e imprime la información]
     """
-    fuente_unico= open('C:\\Users\\dany_\\Downloads\\Algoritmos\\Trabajo Práctico\\Final\\fuente_unico.csv','r' )
+    fuente_unico= open('fuente_unico.csv','r' )
 
-    comentarios= open('C:\\Users\\dany_\\Downloads\\Algoritmos\\Trabajo Práctico\\Final\\comentarios.csv','r' )
+    comentarios= open('comentarios.csv','r' )
 
     panel_general= open('panel_general.csv','w')
 
