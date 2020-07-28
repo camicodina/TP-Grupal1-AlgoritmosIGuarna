@@ -1,2 +1,2 @@
-test-programas-usuario/app_matematica.py
-test-programas-usuario/lib_matematica.py
+C:\Users\camila\Desktop\TP-Grupal1-AlgoritmosIGuarna\programa_prueba\app_matematica.py
+C:\Users\camila\Desktop\TP-Grupal1-AlgoritmosIGuarna\programa_prueba\lib_matematica.py

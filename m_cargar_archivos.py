@@ -299,7 +299,7 @@ def cargar_archivo():
     mezcla_archivos_intermedios()
 
 
-cargar_archivo()
+
 
 
 

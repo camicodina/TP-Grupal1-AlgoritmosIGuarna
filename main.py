@@ -1,5 +1,5 @@
 import TableIt
-import m_cargar_archivo as ca
+import m_cargar_archivos as ca
 import panel_de_funciones as pf
 import consulta_de_funciones as cf
 import analizador
@@ -7,7 +7,7 @@ import arbol_de_invocacion as adi
 import info_desarrollador as infod
 
 
-def opciones():
+def opciones_usuario():
     """[Autor: Camila Codina]
        [Ayuda: Redirecciona a los módulos]
     """
@@ -39,12 +39,12 @@ def main():
     opciones = [
     ["1) Panel de funciones"],
     ["2) Consulta de Funciones"],
-    ["3) Analizador de Reutalizacion de codigo"]
-    ["4) Arbol de invocacion"]
+    ["3) Analizador de Reutalizacion de codigo"],
+    ["4) Arbol de invocacion"],
     ["5) Informacion por desarrollador"]
     ]
     TableIt.printTable(opciones)
-    opciones()
+    opciones_usuario()
     return 
 
 main()
