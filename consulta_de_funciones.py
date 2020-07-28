@@ -11,14 +11,17 @@ def listar_fuente_unico():
     codigos = []
     fuente_unico_funciones={}
     n=0
+    i=0
     with open('fuente_unico.csv','r') as fuente_unico:
         for linea in fuente_unico:
             funciones.append(linea.rstrip("\n").split(",")[0])
-            parametros.append(linea[linea.find("(")+1:linea.rfind(")")])
             listar_funciones.append(linea.rstrip('\n'))
         for funcion in listar_funciones:
             a = funcion
             a = a.replace('),', ')//').split('//')
+            print(funciones[i])
+            parametros.append(a[0].lstrip(funciones[i]).replace(",", ""))
+            i+=1
             modulo = a[1].split(",")[0]
             modulos.append(modulo)
             codigo_funcion = a[1].lstrip(modulo)
@@ -35,11 +38,28 @@ def listar_comentarios():
     """
     with open('comentarios.csv','r') as comentarios:
         comentarios_funciones = {}
+        lista_comentarios = []
         nombres_funciones_ordenadas = []
+        autores = []
+        ayudas = []
+        n=0
         for linea in comentarios:
-            nombre_funcion, autor, ayuda_uso, otro= linea.rstrip("\n").split(",")
-            comentarios_funciones[nombre_funcion] = [autor, ayuda_uso, otro]
-            nombres_funciones_ordenadas.append(nombre_funcion)
+            lista_comentarios.append(linea.rstrip("\n").split(","))
+    for x in lista_comentarios:
+        nombres_funciones_ordenadas.append(x[0])
+        autor = x[1]
+        if "[Autor:" in autor:
+            autor = autor[8:].rstrip("]")
+        autores.append(autor)
+        ayuda= ' '.join(x[2:])
+        if "[Ayuda:" in ayuda:
+            sep = "]"
+            ayuda = ayuda.split(sep)[0]
+            ayuda = ayuda[8:]
+        ayudas.append(ayuda)
+    for nombre_funcion in nombres_funciones_ordenadas:
+         comentarios_funciones[nombre_funcion] = [autores[n], ayudas[n]]
+         n+=1
     return comentarios_funciones,nombres_funciones_ordenadas
 
 def crear_tabla(nombres_funciones_ordenadas):
