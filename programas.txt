@@ -1,2 +1,0 @@
-../prueba-tp/app_matematica.py
-../prueba-tp/lib_matematica.py

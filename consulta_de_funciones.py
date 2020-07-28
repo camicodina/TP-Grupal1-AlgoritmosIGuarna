@@ -67,9 +67,9 @@ def crear_tabla(nombres_funciones_ordenadas):
        [Ayuda: Genera una tabla con los nombres de las funciones que se podrían analizar]
     """
     Tabla = """
-    +--------------------------------------------------------------------+
-    |++++++++++++++++++++ FUNCIONES DEL PROGRAMA ++++++++++++++++++++++++|
-    |--------------------------------------------------------------------|
++--------------------------------------------------------------------+
+|++++++++++++++++++++ FUNCIONES DEL PROGRAMA ++++++++++++++++++++++++|
+|--------------------------------------------------------------------|
 """
     lista_nueva = []
     for i in range(0, len(nombres_funciones_ordenadas), 4):
