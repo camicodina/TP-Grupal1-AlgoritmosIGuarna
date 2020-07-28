@@ -19,28 +19,30 @@ def leer_archivo(archivo):
                     i += 1
     return diccionario_de_funciones
 
-def buscar_main(archivo):
+def buscar_main(diccionario):
     """[Autor: Mateo Villarinos]
        [Ayuda: funcion que buscar cual es la funcion principal del programa]
     """
-    dicc_main = leer_archivo(archivo)
     i = 0
     main = ""
-    encontro_main = False
-    while i < len(list(dicc_main.keys())) and not encontro_main:
-        if list(dicc_main.keys())[i] in dicc_main.values():
-            encontro_main = False
-        else:
-            encontro_main = True
-            main = list(dicc_main.keys())[i]           
+    for key in diccionario:
+        no_encontro_main = False
+        if not no_encontro_main:
+            for lista in diccionario:
+                if key in diccionario[lista]:
+                    no_encontro_main = True
+            if not no_encontro_main:
+                main = key
     return main
+            
+
 
 def dibujar_arbol(archivo):
     """[Autor: Mateo Villarinos]
        [Ayuda: funcion que mediante de diferentes algoritmos va dibujando el arbon en una string]
     """
     dicc_arbol = leer_archivo(archivo)
-    principio = buscar_main(archivo)
+    principio = buscar_main(dicc_arbol)
     lista_de_seguimiento = []
     posiciones = [1]
     flecha = " ---> "
@@ -82,4 +84,5 @@ def leer():
     print(dibujar_arbol(fuente_unico))
     fuente_unico.close()
     
+leer()
 
