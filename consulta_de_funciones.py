@@ -182,7 +182,6 @@ def respuesta_input(funcion_input,pedido,fuente_unico_funciones,comentarios_func
     """[Autor: Camila Codina]
        [Ayuda: Input del usuario y respuesta del programa]
     """
-    funcion_elegida = ''
     while funcion_input != "":
         if pedido[0] in nombres_funciones_ordenadas:
             if pedido[1] == "?":
@@ -218,5 +217,5 @@ def consulta_de_funciones():
     respuesta_input(funcion_input,pedido,fuente_unico_funciones,comentarios_funciones, nombres_funciones_ordenadas)
     return
 
-consulta_de_funciones()
+
 

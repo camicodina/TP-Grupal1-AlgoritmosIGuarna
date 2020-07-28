@@ -222,4 +222,4 @@ def generar_analizador():
 
     return
 
-generar_analizador()
+
