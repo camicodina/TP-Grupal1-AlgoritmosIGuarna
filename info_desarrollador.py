@@ -1,3 +1,8 @@
+from panel_de_funciones import autores
+from panel_de_funciones import cantidad_lineas_codigo
+from panel_de_funciones import cantidad_parametros_codigo
+
+
 def diccionario_autores_funciones(comentarios):
     """[Autor: Daniela Bolivar]
        [Ayuda: Crea un diccionario con los autores de cada función. A la vez crea un subdiccionario 
@@ -9,24 +14,28 @@ def diccionario_autores_funciones(comentarios):
 
     for linea in comentarios:
 
-        autor= linea[1]
+        lista=linea.rstrip('\n').split(',')
 
-        if linea[1]==' ':
-
+        if lista[1]=='':
             autor='Anónimo'
+
+        else:     
+            autor= autores(lista[1])
 
         if autor not in diccionario_autores:
             
-            diccionario_autores[autor]={'Función':['linea[0]'], 'Líneas':[0],'Cantidad Funciones':0, 'Líneas Totales':0, 'Porcentaje':0}
+            diccionario_autores[autor]={'Función':[lista[0]], 'Líneas':[],'Cantidad Funciones':0, 'Líneas Totales':0, 'Porcentaje':0}
 
         else:
-            diccionario_autores[autor]['Función'].append('linea[0]')
+            diccionario_autores[autor]['Función'].append(lista[0])
 
     
     return diccionario_autores
 
 
-def encuentro_funcion_autor(lista, diccionario):
+
+
+def encuentro_funcion_autor(funcion, diccionario):
     """[Autor: Daniela Bolivar]
        [Ayuda: Dada una lista y el diccionario creado en 'diccionario_autores_funciones(comentarios)' se busca
        a qué autor pertenece la lista ingresada]
@@ -34,29 +43,10 @@ def encuentro_funcion_autor(lista, diccionario):
     
     autor=''
     for nombre in diccionario:
-        if 'lista[0]' in diccionario[nombre]['Función']:
+        if funcion in diccionario[nombre]['Función']:
             autor=nombre
     
-    return autor
-
-def lineas_de_codigo(lista):
-    """[Autor: Daniela Bolivar]
-       [Ayuda: Esta función se utilizará para contar las líneas de código de una función por eso es que se analiza
-       a partir de la componente 1 de la lista]
-    """
-    T=True
-    k=1
-    while T and k< len(lista):
-        if ')' in lista[k]:
-            T=False
-                  
-        if '()' in lista[k]:
-            T=False
-            
-        k+=1
-    #Se le suma 1 a la resta porque la tercera componente es el módulo
-    k=len(lista)-(k+1)
-    return k      
+    return autor  
 
 
 def analisis_cantidad_lineas(fuente_unico, comentarios):
@@ -65,27 +55,32 @@ def analisis_cantidad_lineas(fuente_unico, comentarios):
        El resultado del análisis quedará cargado en un diccionario]
     """
     #Genero el diccionario a partir del arcivo comentarios.csv
+    comentarios= open('comentarios.csv','r' )
     diccionario_autores= diccionario_autores_funciones(comentarios) 
+
 
     n=0 #Esta variable servirá para contar las líneas totales del código
     
     #Recorro línea por línea el archivo fuente_unico
+    fuente_unico= open('fuente_unico.csv','r' )
+
     for linea in fuente_unico:
         #transfomo la línea a analizar en una lista
         lista=linea.rstrip('\n').split(',') 
 
         #Completo el diccionario
-        autor = encuentro_funcion_autor(lista, diccionario_autores)
+        autor = encuentro_funcion_autor(lista[0].replace('"', ''), diccionario_autores)
 
-        diccionario_autores[autor]['Líneas'].append(lineas_de_codigo(lista))
+        diccionario_autores[autor]['Líneas'].append(cantidad_lineas_codigo(cantidad_parametros_codigo(lista),lista))
 
-        diccionario_autores[autor]['Líneas Totales']+= lineas_de_codigo(lista)
+        diccionario_autores[autor]['Líneas Totales']+= cantidad_lineas_codigo(cantidad_parametros_codigo(lista),lista)
 
-        n+=len(lista)-3
+        n+=cantidad_lineas_codigo(cantidad_parametros_codigo(lista),lista)
     
     for autor in diccionario_autores:
         diccionario_autores[autor]['Porcentaje']= diccionario_autores[autor]['Líneas Totales']/n
         diccionario_autores[autor]['Cantidad Funciones']= len(diccionario_autores[autor]['Función'])
+
 
     return diccionario_autores
 
@@ -126,38 +121,41 @@ def creacion_informe(archivo,fuente_unico, comentarios):
        [Ayuda: Dados los archivos fuente_unico.csv y comentarios.csv se escribe sobre un "archivo" e imprime por
        pantalla la información requerida]
     """
-
+    fuente_unico= open('fuente_unico.csv','r' )
+     
+    comentarios= open('comentarios.csv','r' )
     diccionario_autores=analisis_cantidad_lineas(fuente_unico, comentarios)
+
 
     autores_ordenados=lista_autores(diccionario_autores)
 
     n=longitud_de_funciones(diccionario_autores)+2
 
-    m=n+11
+    m=n+16
 
     print(' '*4,'Informe de Desarrollo por Autor')
 
-    archivo.write(' '*4,'Informe de Desarrollo por Autor')
+    archivo.write(' '*4 +'Informe de Desarrollo por Autor')
 
     for autor in autores_ordenados:
-        #Recorro la lista y a partir de esta obtengo los valores correspondientes a las claves del diccionario
+        
 
         print('\n','Autor: '+ autor,'\n')
-        archivo.write('\n','Autor: '+ autor,'\n')
+        #archivo.write('\n','Autor: '+ autor,'\n')
 
         print(' '*7,'Funcion',' '*(n-len('Funcion')),'Líneas' )
-        archivo.write(' '*7,'Funcion',' '*(n-len('Funcion')),'Líneas' )
+        #archivo.write(' '*7,'Funcion',' '*(n-len('Funcion')),'Líneas' )
 
         print(' '*7,'-'*m )
-        archivo.write(' '*7,'-'*m )
+        #archivo.write(' '*7,'-'*m )
 
         for i in range(0,len(diccionario_autores[autor]['Función'])):
 
             print(' '*7,diccionario_autores[autor]['Función'][i],' '*(n-len(diccionario_autores[autor]['Función'][i])),' '*(4-len(str(diccionario_autores[autor]['Líneas'][i]))),diccionario_autores[autor]['Líneas'][i])
-            archivo.write(' '*7,diccionario_autores[autor]['Función'][i],' '*(n-len(diccionario_autores[autor]['Función'][i])),' '*(4-len(str(diccionario_autores[autor]['Líneas'][i]))),diccionario_autores[autor]['Líneas'][i])
+            #archivo.write(' '*7,diccionario_autores[autor]['Función'][i],' '*(n-len(diccionario_autores[autor]['Función'][i])),' '*(4-len(str(diccionario_autores[autor]['Líneas'][i]))),diccionario_autores[autor]['Líneas'][i])
     
         print(' '*7,diccionario_autores[autor]['Cantidad Funciones'],' Funciones - Lineas',' '*(n-(len(' Funciones - Lineas')+len(str(diccionario_autores[autor]['Cantidad Funciones'])))),' '*(3-len(str(diccionario_autores[autor]['Líneas Totales']))),diccionario_autores[autor]['Líneas Totales'], ' ', '{:.2%}'.format(diccionario_autores[autor]['Porcentaje']), '\n')
-        archivo.write(' '*7,diccionario_autores[autor]['Cantidad Funciones'],' Funciones - Lineas',' '*(n-(len(' Funciones - Lineas')+len(str(diccionario_autores[autor]['Cantidad Funciones'])))),' '*(3-len(str(diccionario_autores[autor]['Líneas Totales']))),diccionario_autores[autor]['Líneas Totales'], ' ', '{:.2%}'.format(diccionario_autores[autor]['Porcentaje']), '\n')
+        #archivo.write(' '*7,diccionario_autores[autor]['Cantidad Funciones'],' Funciones - Lineas',' '*(n-(len(' Funciones - Lineas')+len(str(diccionario_autores[autor]['Cantidad Funciones'])))),' '*(3-len(str(diccionario_autores[autor]['Líneas Totales']))),diccionario_autores[autor]['Líneas Totales'], ' ', '{:.2%}'.format(diccionario_autores[autor]['Porcentaje']), '\n')
     
     return
 
@@ -182,6 +180,5 @@ def generacion_participacion():
     participacion.close()
 
     return
-
 
 generacion_participacion()
