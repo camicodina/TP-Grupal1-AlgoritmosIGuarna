@@ -19,7 +19,6 @@ def listar_fuente_unico():
         for funcion in listar_funciones:
             a = funcion
             a = a.replace('),', ')//').split('//')
-            print(funciones[i])
             parametros.append(a[0].lstrip(funciones[i]).replace(",", ""))
             i+=1
             modulo = a[1].split(",")[0]
@@ -212,6 +211,10 @@ def consulta_de_funciones():
     comentarios_funciones,nombres_funciones_ordenadas = listar_comentarios()
     fuente_unico_funciones = listar_fuente_unico()
     crear_tabla(nombres_funciones_ordenadas)
+    print("Se debe ingresar una de las funciones identificadas seguido de:")
+    print("'?': muestra la descripción asociada al uso de la función, los parámetros que espera, el módulo y su autor.")
+    print("'#': muestra todo lo relativo a la función")
+    print("'?todo' y '#todo' listan esto para todas las funciones. 'imprimir ?todo' exporta a un archivo .txt '?todo' \n")
     funcion_input = input(str("Función: "))
     pedido = funcion_input.split(" ")
     respuesta_input(funcion_input,pedido,fuente_unico_funciones,comentarios_funciones, nombres_funciones_ordenadas)

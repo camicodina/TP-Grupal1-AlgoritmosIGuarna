@@ -11,21 +11,22 @@ def opciones_usuario():
     """[Autor: Camila Codina]
        [Ayuda: Redirecciona a los módulos]
     """
-    usuario_input = int(input("Seleccione un número:"))
+    usuario_input = input("Seleccione un número:")
     while usuario_input != "":
-        if usuario_input == 1:
+        if usuario_input == "1":
             pf.generacion_archivo()
-        elif usuario_input == 2:
+        elif usuario_input == "2":
             cf.consulta_de_funciones()
-        elif usuario_input == 3:
+        elif usuario_input == "3":
             analizador.generar_analizador()
-        elif usuario_input == 4:
+        elif usuario_input == "4":
             adi.leer()
-        elif usuario_input == 5:
+        elif usuario_input == "5":
             infod.generacion_participacion()
         else:
             print("Número no válido. Intente nuevamente")
-        usuario_input = int(input("Seleccione un número:"))
+        usuario_input = input("Seleccione un número:")
+    print("Gracias por testear nuestro MVP!")
     return
 
 def main():
