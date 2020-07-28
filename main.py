@@ -35,6 +35,7 @@ def main():
     print("Ingrese un archivo en formato .txt con los nombres de los archivos a analizar")
     ca.cargar_archivo()
     print("Seleccione el número de la función a realizar")
+    print("ENTER para salir")
     opciones = [
     ["1) Panel de funciones"],
     ["2) Consulta de Funciones"],

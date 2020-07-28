@@ -67,9 +67,9 @@ def crear_tabla(nombres_funciones_ordenadas):
        [Ayuda: Genera una tabla con los nombres de las funciones que se podrían analizar]
     """
     Tabla = """
-       +--------------------------------------------------------------------+
-       |++++++++++++++++++++ FUNCIONES DEL PROGRAMA ++++++++++++++++++++++++|
-       |--------------------------------------------------------------------|
+    +--------------------------------------------------------------------+
+    |++++++++++++++++++++ FUNCIONES DEL PROGRAMA ++++++++++++++++++++++++|
+    |--------------------------------------------------------------------|
 """
     lista_nueva = []
     for i in range(0, len(nombres_funciones_ordenadas), 4):
@@ -91,6 +91,7 @@ def signo_pregunta(comentarios_funciones,fuente_unico_funciones, funcion_pedida)
     ayuda_uso_funcion = comentarios_funciones[funcion_pedida][1]
     autor_funcion = comentarios_funciones[funcion_pedida][0]
     parametro_funcion = fuente_unico_funciones[funcion_pedida][0]
+    parametro_funcion = parametro_funcion.replace(" ", ",")
     modulo_funcion = fuente_unico_funciones[funcion_pedida][1]
     signo_pregunta_funcion = {funcion_pedida:[ayuda_uso_funcion,parametro_funcion,modulo_funcion,autor_funcion]}
     print("-------------------------------")
@@ -139,23 +140,25 @@ def numeral_todo(comentarios_funciones,fuente_unico_funciones,nombres_funciones_
 def crear_ayuda_funciones(comentarios_funciones,fuente_unico_funciones,nombres_funciones_ordenadas):
     """[Autor: Camila Codina]
        [Ayuda: Crea archivo ayuda_funciones.txt con info de ?todo]
-    """
-    for i in nombres_funciones_ordenadas:
-        signo_pregunta(comentarios_funciones,fuente_unico_funciones, i)
-    # llamado_todo = signo_pregunta_todo(comentarios_funciones,fuente_unico_funciones,nombres_funciones_ordenadas)
-    with open('ayuda_funciones.txt','w') as crear_ayuda:
-        for x in llamado_todo:
-            for i in nombres_funciones_ordenadas:
-                crear_ayuda.write(i)
-                crear_ayuda.write("\n Ayuda:")
-                crear_ayuda.write(x[i][0])
-                crear_ayuda.write("\n Parámetros:")
-                crear_ayuda.write(x[i][1])
-                crear_ayuda.write("\n Módulo:")
-                crear_ayuda.write(x[i][2])
-                crear_ayuda.write("\n Autor:")
-                crear_ayuda.write(x[i][3])
-                crear_ayuda.write("-------------------------------")    
+    """   
+    with open('ayuda_funciones.txt','w') as crear_ayuda: 
+        for funcion in nombres_funciones_ordenadas:
+            ayuda_uso_funcion = comentarios_funciones[funcion][1]
+            autor_funcion = comentarios_funciones[funcion][0]
+            parametro_funcion = fuente_unico_funciones[funcion][0]
+            parametro_funcion = parametro_funcion.replace(" ", ",")
+            modulo_funcion = fuente_unico_funciones[funcion][1]
+            crear_ayuda.write(" Función: ")
+            crear_ayuda.write(funcion)
+            crear_ayuda.write("\n Ayuda: ")
+            crear_ayuda.write(ayuda_uso_funcion)
+            crear_ayuda.write("\n Parametros: ")
+            crear_ayuda.write(parametro_funcion)
+            crear_ayuda.write("\n Modulo: ")
+            crear_ayuda.write(modulo_funcion)
+            crear_ayuda.write("\n Autor: ")
+            crear_ayuda.write(autor_funcion)
+            crear_ayuda.write("\n ------------------------------- \n") 
     return
 
 
@@ -164,11 +167,14 @@ def leer_ayuda_funciones():
        [Ayuda: Formatea ayuda_funciones.txt para que no aparezcan mas de 80 caracteres por linea con info de ?]
     """
     with open('ayuda_funciones.txt','r') as ayuda:
-        todo_ayuda = ayuda.readlines()
-        ayuda = todo_ayuda[0]
-        n = 80
-        ayuda = [ayuda[i:i+n] for i in range(0, len(ayuda), n)]
-        print(ayuda)
+        for linea in ayuda:
+            ayuda = linea.rstrip('\n')
+            n = 80
+            ayuda_sep = [ayuda[i:i+n] for i in range(0, len(ayuda), n)]
+            if len(ayuda) > 80:
+                print(ayuda_sep[0], "\n", ayuda_sep[1])
+            else:
+                print(ayuda)
     return 
 
 
@@ -191,6 +197,7 @@ def respuesta_input(funcion_input,pedido,fuente_unico_funciones,comentarios_func
             numeral_todo(comentarios_funciones,fuente_unico_funciones,nombres_funciones_ordenadas)
         elif funcion_input == "imprimir ?todo":
             crear_ayuda_funciones(comentarios_funciones,fuente_unico_funciones,nombres_funciones_ordenadas)
+            leer_ayuda_funciones()
         else:
             print("Función inexistente y/o carácter inválido. Intente nuevamente.")
         funcion_input = input(str("Función: "))
