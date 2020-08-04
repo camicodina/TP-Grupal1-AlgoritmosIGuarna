@@ -1,10 +1,10 @@
 import TableIt
-import m_cargar_archivos as ca
-import panel_de_funciones as pf
-import consulta_de_funciones as cf
-import analizador
-import arbol_de_invocacion as adi
-import info_desarrollador as infod
+from m_cargar_archivos import cargar_archivo
+from panel_de_funciones import generacion_archivo
+from consulta_de_funciones import consulta_de_funciones
+from analizador import generar_analizador
+from arbol_de_invocacion import leer
+from info_desarrollador import generacion_participacion
 
 
 def opciones_usuario():
@@ -14,15 +14,15 @@ def opciones_usuario():
     usuario_input = input("Seleccione un número:")
     while usuario_input != "":
         if usuario_input == "1":
-            pf.generacion_archivo()
+            generacion_archivo()
         elif usuario_input == "2":
-            cf.consulta_de_funciones()
+            consulta_de_funciones()
         elif usuario_input == "3":
-            analizador.generar_analizador()
+            generar_analizador()
         elif usuario_input == "4":
-            adi.leer()
+            leer()
         elif usuario_input == "5":
-            infod.generacion_participacion()
+            generacion_participacion()
         else:
             print("Número no válido. Intente nuevamente")
         usuario_input = input("Seleccione un número:")
@@ -34,7 +34,7 @@ def main():
        [Ayuda: Frontend de la aplicación]
     """
     print("Ingrese un archivo en formato .txt con los nombres de los archivos a analizar")
-    ca.cargar_archivo()
+    cargar_archivo()
     print("Seleccione el número de la función a realizar")
     print("ENTER para salir")
     opciones = [
