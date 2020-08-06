@@ -137,6 +137,7 @@ def calculo_comentario_multiples(linea_modulo,funciones,nombre_funcion,archivo_m
            
             if comentario_multiple in linea_comentario:  #Si encuentra el segundo """ se sale del ciclo
                 comentario_multiple_cierre = False
+    return funciones
 
 def lineas_restantes(funciones,linea_modulo,nombre_funcion):
     '''[Autor:Andres Guerrero]
@@ -158,6 +159,7 @@ def lineas_restantes(funciones,linea_modulo,nombre_funcion):
     elif not '"""' in nueva_linea and linea_codigo_vacia and not nueva_linea.startswith('def ') and nueva_linea.startswith('    '):
         linea_codigo = nueva_linea.lstrip(' ') + '$'
         funciones[nombre_funcion][INDICE_LINEAS_CODIGO] += linea_codigo
+    return funciones
 
 
 def ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta_funciones):
@@ -180,19 +182,28 @@ def ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta
     fh_modulo.close()
     archivo_modulo.close()
 
-def calculo_funcion(validacion_inicio,validacion_final,linea_modulo,funciones,nombre_modulo,archivo_modulo):
-    while validacion_inicio and validacion_final:
+def calculo_funcion(linea_modulo,funciones,nombre_modulo,archivo_modulo):
+    while linea_modulo != '':
+        validacion_inicio = validacion_funcion_inicial(linea_modulo)
+        validacion_final = True
+        while validacion_inicio and validacion_final:
  
-        if linea_modulo.startswith('def '):
-            nombre_guardado = crear_funcion(linea_modulo,funciones,nombre_modulo)
+            if linea_modulo.startswith('def '):
+                nombre_guardado = crear_funcion(linea_modulo,funciones,nombre_modulo)
 
-        calculo_comentario_multiples(linea_modulo,funciones,nombre_guardado,archivo_modulo)
-        lineas_restantes(funciones,linea_modulo,nombre_guardado)  
-        linea_modulo = leer_linea_txt(archivo_modulo)
+            funciones = calculo_comentario_multiples(linea_modulo,funciones,nombre_guardado,archivo_modulo)
+            funciones = lineas_restantes(funciones,linea_modulo,nombre_guardado)  
+            linea_modulo = leer_linea_txt(archivo_modulo)
 
-        validacion_final = validacion_funcion_final(validacion_final,linea_modulo)
-        if not validacion_final:       
-            lineas_restantes(funciones,linea_modulo,nombre_guardado)
+            validacion_final = validacion_funcion_final(validacion_final,linea_modulo)
+            if not validacion_final:       
+                lineas_restantes(funciones,linea_modulo,nombre_guardado)
+
+        #salida de la funcion que se esta analizando
+        if not linea_modulo.startswith('def '):
+            linea_modulo = leer_linea_txt(archivo_modulo)
+    
+    return funciones
 
 
 def funciones_por_modulo():
@@ -209,15 +220,7 @@ def funciones_por_modulo():
         archivo_modulo = open(ruta_modulo,'r')
         linea_modulo = leer_linea_txt(archivo_modulo)
         funciones = {}
-
-        while linea_modulo != '':
-            validacion_inicio = validacion_funcion_inicial(linea_modulo)
-            validacion_final = True
-            calculo_funcion(validacion_inicio,validacion_final,linea_modulo,funciones,nombre_modulo,archivo_modulo) 
-            #salida de la funcion que se esta analizando
-            if not linea_modulo.startswith('def '):
-                linea_modulo = leer_linea_txt(archivo_modulo)
-
+        funciones = calculo_funcion(linea_modulo,funciones,nombre_modulo,archivo_modulo) 
         #salida del modulo_n que se esta analizando
         ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta_funciones)
         ruta_modulo = leer_linea_txt(archivo_fuente).rstrip('\n')
@@ -373,6 +376,5 @@ def cargar_archivo():
 
 cargar_archivo()
 
-#meter el 3er while, return de las funciones void de comentarios y esto de lineas
 #buscar nombres buenos ,recortar codigo con devolucion de expresiones
 #preguntar lo que no entendi
