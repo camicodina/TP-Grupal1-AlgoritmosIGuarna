@@ -1,10 +1,20 @@
-def solicitar_archivo():
-    '''[Autor:Andres Guerrero]
-       [Ayuda:abre la ruta del archivo que se va a analizar] 
-    '''
-    archivo_fuente = open(r'.\programa_prueba\programas.txt','r')
+#INDICES DEL DICCIONARIO DE ARCHIVOS INTERMEDIOS
+INDICE_PARAMENTROS = 0
+INDICE_NOMBRE_MODULO = 1
+INDICE_AUTOR = 2
+INDICE_AYUDA = 3
+INDICE_LINEAS_COMENTARIOS = 4
+INDICE_LINEAS_CODIGO = 5
 
-    return archivo_fuente
+#INDICES DE LA FUNCION MENOR ELEGIDA PARA GRABAR
+INDICE_NOMBRE_FUNCION_MENOR = 0
+INDICE_PARAMENTROS_FUNCION_MENOR = 1
+INDICE_NOMBRE_MODULO_FUNCION_MENOR = 2
+INDICE_AUTOR_FUNCION_MENOR = 3
+INDICE_AYUDA_FUNCION_MENOR = 4
+INDICE_LINEAS_COMENTARIOS_FUNCION_MENOR = 5
+INDICE_LINEAS_CODIGO_FUNCION_MENOR = 6
+
 
 def leer_linea_txt(archivo):
     '''[Autor:Andres Guerrero]
@@ -27,14 +37,10 @@ def calculo_nombre_modulo(ruta_modulo):
 def validacion_funcion_inicial(linea_modulo):
     '''[Autor:Andres Guerrero]
        [Ayuda:valida si la funcion a iniciado para abrir el ciclo] 
-    '''
-    validacion_inicio = False
-    if linea_modulo.startswith('def '):
-        validacion_inicio = True 
-    
-    return validacion_inicio
+    ''' 
+    return linea_modulo.startswith('def ')
 
-def validacion_funcion_final(validacion_final,linea_modulo,archivo_modulo,nombre_funcion):
+def validacion_funcion_final(validacion_final,linea_modulo):
     '''[Autor:Andres Guerrero]
        [Ayuda:busca si a finalizado la funcion para darle cierre al ciclo] 
     '''
@@ -42,14 +48,10 @@ def validacion_funcion_final(validacion_final,linea_modulo,archivo_modulo,nombre
 
     if linea_modulo.startswith('    return'):
         validacion_final = False
-
-    if linea_modulo[0:4] != '    ': 
-        if linea_modulo != '\n':
-            if not linea_modulo.startswith('def ') :
-                validacion_final = False
-                
-    if linea_modulo.startswith('def '):
-                    validacion_final = False
+    elif linea_modulo[0:4] != '    ' and linea_modulo != '\n' and not linea_modulo.startswith('def '): 
+        validacion_final = False              
+    elif linea_modulo.startswith('def '):
+        validacion_final = False
         
     return validacion_final
 
@@ -117,24 +119,24 @@ def calculo_comentario_multiples(linea_modulo,funciones,nombre_funcion,archivo_m
        [Ayuda:diferencia si es un comentario multiple y ahi elige si es un autor,
        ayuda o linea simple y guarda en el diccionario, con su clave respectiva] 
     '''
-    c_multiple = '"""' 
+    comentario_multiple = '"""' 
     linea_comentario = linea_modulo
 
-    if c_multiple in linea_comentario:
-        c_multiple_cierre = True
-        while c_multiple_cierre:
+    if comentario_multiple in linea_comentario:
+        comentario_multiple_cierre = True
+        while comentario_multiple_cierre:
             if '[Autor:' in linea_comentario:
                 autor,linea_comentario = extraccion_corchetes(linea_comentario,archivo_modulo) 
-                funciones[nombre_funcion][2] = autor
+                funciones[nombre_funcion][INDICE_AUTOR] = autor
             elif '[Ayuda:' in linea_comentario:
                 ayuda,linea_comentario = extraccion_corchetes(linea_comentario,archivo_modulo)
-                funciones[nombre_funcion][3] = ayuda
+                funciones[nombre_funcion][INDICE_AYUDA] = ayuda
             elif not linea_comentario:
                 separador_linea = linea_comentario + '$'
-                funciones[nombre_funcion][4] += separador_linea
+                funciones[nombre_funcion][INDICE_LINEAS_COMENTARIOS] += separador_linea
            
-            if c_multiple in linea_comentario:  #Si encuentra el segundo """ se sale del ciclo
-                c_multiple_cierre = False
+            if comentario_multiple in linea_comentario:  #Si encuentra el segundo """ se sale del ciclo
+                comentario_multiple_cierre = False
 
 def lineas_restantes(funciones,linea_modulo,nombre_funcion):
     '''[Autor:Andres Guerrero]
@@ -149,39 +151,56 @@ def lineas_restantes(funciones,linea_modulo,nombre_funcion):
         linea_comentario_simple_cambio = nueva_linea[pos:]
         linea_comentario_simple = nueva_linea[pos:] + '$'
         linea_codigo = nueva_linea.replace(linea_comentario_simple_cambio,'').lstrip(' ') + '$'
-        funciones[nombre_funcion][4] += linea_comentario_simple
+        funciones[nombre_funcion][INDICE_LINEAS_COMENTARIOS] += linea_comentario_simple
         if linea_codigo != '$':
-            funciones[nombre_funcion][5] += linea_codigo
+            funciones[nombre_funcion][INDICE_LINEAS_CODIGO] += linea_codigo
 
-    elif not '"""' in nueva_linea and linea_codigo_vacia and not nueva_linea.startswith('def '):
+    elif not '"""' in nueva_linea and linea_codigo_vacia and not nueva_linea.startswith('def ') and nueva_linea.startswith('    '):
         linea_codigo = nueva_linea.lstrip(' ') + '$'
-        funciones[nombre_funcion][5] += linea_codigo
+        funciones[nombre_funcion][INDICE_LINEAS_CODIGO] += linea_codigo
+
 
 def ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta_funciones):
     '''[Autor:Andres Guerrero]
-        [Ayuda:ordena y guarda en un archivo intermedio lo relativo a la funcion] 
+       [Ayuda:ordena y guarda en un archivo intermedio lo relativo a la funcion] 
     '''
     lista_modulo_ordenada = sorted(funciones.items(), key = lambda tupla : tupla[0] , reverse=False)
     fh_modulo = open('m_' + nombre_modulo + '.csv','w')
     archivo_ruta_funciones.write('m_' + nombre_modulo + '.csv' + '\n')
     
     for nombre_funcion,campos in lista_modulo_ordenada:
-        parametros = campos[0]
-        autor = campos[2]
-        ayuda = campos[3]
-        comentario = campos[4]
-        lineas_codigo = campos[5].rstrip('$')
+        parametros = campos[INDICE_PARAMENTROS]
+        nombre_modulo = campos[INDICE_NOMBRE_MODULO]
+        autor = campos[INDICE_AUTOR]
+        ayuda = campos[INDICE_AYUDA]
+        comentario = campos[INDICE_LINEAS_COMENTARIOS]
+        lineas_codigo = campos[INDICE_LINEAS_CODIGO].rstrip('$')
         fh_modulo.write(nombre_funcion + ',&' + parametros + ',&' + nombre_modulo + ',&' + autor + ',&' + ayuda + ',&' + comentario + ',&' + lineas_codigo + '\n')
 
     fh_modulo.close()
     archivo_modulo.close()
 
-def funciones_por_modulo(archivo_fuente):
+def calculo_funcion(validacion_inicio,validacion_final,linea_modulo,funciones,nombre_modulo,archivo_modulo):
+    while validacion_inicio and validacion_final:
+ 
+        if linea_modulo.startswith('def '):
+            nombre_guardado = crear_funcion(linea_modulo,funciones,nombre_modulo)
+
+        calculo_comentario_multiples(linea_modulo,funciones,nombre_guardado,archivo_modulo)
+        lineas_restantes(funciones,linea_modulo,nombre_guardado)  
+        linea_modulo = leer_linea_txt(archivo_modulo)
+
+        validacion_final = validacion_funcion_final(validacion_final,linea_modulo)
+        if not validacion_final:       
+            lineas_restantes(funciones,linea_modulo,nombre_guardado)
+
+
+def funciones_por_modulo():
     '''[Autor:Andres Guerrero]
        [Ayuda:estructura que se encarga de cargar y hacer los cortes por rutas de los modulos,
        modulo en el que se trabaja,funcion_analizada] 
     '''
-    #retorna una lista ordenado alfabeticamente por funciones
+    archivo_fuente = open(r'.\programa_prueba\programas.txt','r')
     ruta_modulo = leer_linea_txt(archivo_fuente).rstrip('\n')
     archivo_ruta_funciones = open('archivo_rutas_funciones.txt','w')
 
@@ -194,26 +213,18 @@ def funciones_por_modulo(archivo_fuente):
         while linea_modulo != '':
             validacion_inicio = validacion_funcion_inicial(linea_modulo)
             validacion_final = True
-            while validacion_inicio and validacion_final:
-                #inicializa el diccionario con el nombre de la funcion actual
-                nombre_funcion = crear_funcion(linea_modulo,funciones,nombre_modulo,)
-
-                if nombre_funcion != '': #guarda el nombre de la funcion que se esta guardando en el dic
-                    nombre_guardado = nombre_funcion
-                calculo_comentario_multiples(linea_modulo,funciones,nombre_guardado,archivo_modulo) #guarda comentarios multiples / separa autor y ayuda
-                lineas_restantes(funciones,linea_modulo,nombre_guardado) # divide entre comentario simple y resto de funcion
-                linea_modulo = leer_linea_txt(archivo_modulo)
-
-                validacion_final = validacion_funcion_final(validacion_final,linea_modulo,archivo_modulo,nombre_funcion)
-                
+            calculo_funcion(validacion_inicio,validacion_final,linea_modulo,funciones,nombre_modulo,archivo_modulo) 
             #salida de la funcion que se esta analizando
             if not linea_modulo.startswith('def '):
                 linea_modulo = leer_linea_txt(archivo_modulo)
+
         #salida del modulo_n que se esta analizando
-        ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta_funciones)#toma el diccionario de el modulo_n y lo ordena creando un archivo intermedio
+        ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta_funciones)
         ruta_modulo = leer_linea_txt(archivo_fuente).rstrip('\n')
+
     #cerrado del archivo que contiene las rutas de los archivos intermedios
     archivo_ruta_funciones.close()
+    archivo_fuente.close()
 
 
 def apertura_archivos():
@@ -264,8 +275,7 @@ def validar_fin_lineas(lista_lineas,Fin):
     '''[Autor:Andres Guerrero]
        [Ayuda:adentro de la parte de mezcla naliza cual de las lineas a llegado al fin] 
     '''
-    
-    validar = False
+
     cont_fin = 0 # cantidad de archivos que llegaron al fin
 
     for linea in lista_lineas:
@@ -273,10 +283,8 @@ def validar_fin_lineas(lista_lineas,Fin):
             cont_fin+=1
 
     cant_archivos = len(lista_lineas)
-    if cont_fin != cant_archivos:
-        validar = True
 
-    return validar 
+    return cont_fin != cant_archivos
 
 
 def escritura_archivos(nombre_menor,a_comentario,fuente_unico):
@@ -285,10 +293,10 @@ def escritura_archivos(nombre_menor,a_comentario,fuente_unico):
        comentarios.csv y fuente_unico.csv] 
     '''
 
-    nombre_funcion = nombre_menor[0]
-    parametros = nombre_menor[1]
-    modulo = nombre_menor[2]
-    relativo_funcion = nombre_menor[6]
+    nombre_funcion = nombre_menor[INDICE_NOMBRE_FUNCION_MENOR]
+    parametros = nombre_menor[INDICE_PARAMENTROS_FUNCION_MENOR]
+    modulo = nombre_menor[INDICE_NOMBRE_MODULO_FUNCION_MENOR]
+    relativo_funcion = nombre_menor[INDICE_LINEAS_CODIGO_FUNCION_MENOR]
     relativo_funcion_separado = relativo_funcion.split('$')
     separacion_relativo = ''
 
@@ -297,9 +305,9 @@ def escritura_archivos(nombre_menor,a_comentario,fuente_unico):
         separacion_relativo += agregado
     fuente_unico.write(nombre_funcion  + ',' +  parametros  + ',' + modulo  + separacion_relativo + '\n')
 
-    autor = nombre_menor[3]
-    ayuda = nombre_menor[4]
-    comentarios_unicos = nombre_menor[5]
+    autor = nombre_menor[INDICE_AUTOR_FUNCION_MENOR]
+    ayuda = nombre_menor[INDICE_AYUDA_FUNCION_MENOR]
+    comentarios_unicos = nombre_menor[INDICE_LINEAS_COMENTARIOS_FUNCION_MENOR]
     comentarios_unicos_separados = comentarios_unicos.split('$')
     separacion_cometario = ''
 
@@ -359,7 +367,12 @@ def cargar_archivo():
     '''[Autor:Andres Guerrero]
        [Ayuda:estructura main del modulo] 
     '''
-    archivo_fuente = solicitar_archivo()
-    funciones_por_modulo(archivo_fuente)
+    funciones_por_modulo()
     mezcla_archivos_intermedios()
 
+
+cargar_archivo()
+
+#meter el 3er while
+#buscar nombres buenos ,recortar codigo con devolucion de expresiones
+#preguntar lo que no entendi
