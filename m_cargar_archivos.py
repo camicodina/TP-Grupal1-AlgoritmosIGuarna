@@ -373,6 +373,6 @@ def cargar_archivo():
 
 cargar_archivo()
 
-#meter el 3er while
+#meter el 3er while, return de las funciones void de comentarios y esto de lineas
 #buscar nombres buenos ,recortar codigo con devolucion de expresiones
 #preguntar lo que no entendi
