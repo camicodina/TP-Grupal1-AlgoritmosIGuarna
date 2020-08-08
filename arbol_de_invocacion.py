@@ -90,4 +90,3 @@ def leer():
     print(dibujar_arbol(fuente_unico))
     fuente_unico.close()
 
-leer()
