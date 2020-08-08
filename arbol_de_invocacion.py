@@ -1,23 +1,25 @@
-from consulta_de_funciones import listar_fuente_unico
-
 def leer_archivo(archivo):
     """[Autor: Mateo Villarinos]
        [Ayuda: funcion que toma un modulo para devolver un diccionario con el nombre de las funciones
        y como valor en la cantidad de lineas y las invocaciones]
     """
-    diccionario_de_funciones = listar_fuente_unico()
-    lista_key = list(diccionario_de_funciones.keys())
+    diccionario_de_funciones = {}
+    diccionario_final = {}
     for linea in archivo:
         lista_linea = linea.rstrip("\n").split(",")
-        diccionario_de_funciones[lista_linea[0]] = [str(len(lista_linea)-3)]
-        for titulo in lista_key:
+        diccionario_de_funciones[lista_linea[0]] = lista_linea[3:]
+    lista_de_funciones = list(diccionario_de_funciones.keys())
+    for titulo in lista_de_funciones:
+        diccionario_final[titulo] = [str(len(diccionario_de_funciones[titulo]))]
+        for key in diccionario_de_funciones:
             i = 0
-            while i < len(lista_linea[3:]):
-                if titulo in lista_linea[3+i] and titulo not in diccionario_de_funciones[lista_linea[0]]:
-                    diccionario_de_funciones[lista_linea[0]].append(titulo)
-                else:
+            while i < len(diccionario_de_funciones[titulo]):
+                if key in diccionario_de_funciones[titulo][i]:
+                    diccionario_final[titulo].append(key)
                     i += 1
-    return diccionario_de_funciones
+                else:
+                     i += 1
+    return diccionario_final
 
 def buscar_main(diccionario):
     """[Autor: Mateo Villarinos]
@@ -26,12 +28,12 @@ def buscar_main(diccionario):
     i = 0
     main = ""
     for key in diccionario:
-        no_encontro_main = False
-        if not no_encontro_main:
+        no_encontro_main = True
+        if no_encontro_main:
             for lista in diccionario:
                 if key in diccionario[lista]:
-                    no_encontro_main = True
-            if not no_encontro_main:
+                    no_encontro_main = False
+            if no_encontro_main:
                 main = key
     return main
             
@@ -39,7 +41,7 @@ def buscar_main(diccionario):
 
 def dibujar_arbol(archivo):
     """[Autor: Mateo Villarinos]
-       [Ayuda: funcion que mediante de diferentes algoritmos va dibujando el arbon en una string]
+       [Ayuda: funcion que va determinando las bases del arbol]
     """
     dicc_arbol = leer_archivo(archivo)
     principio = buscar_main(dicc_arbol)
@@ -54,18 +56,9 @@ def dibujar_arbol(archivo):
         while len(dicc_arbol[k]) > 1 and posiciones[n] < len(dicc_arbol[k]) and posiciones[0] < len(dicc_arbol[principio]):
             posiciones.append(1)
             lista_de_seguimiento.append(k)
-            if arbol[-1:] == "\n":
-                indentacion = (n)*6*" "
-                for campo in lista_de_seguimiento:
-                    indentacion += len(campo)*" "+(len(dicc_arbol[campo][0])+2)*" "
-                arbol += indentacion
-            k = dicc_arbol[k][posiciones[n]]
-            n += 1
-            arbol += flecha + k + "({})".format(dicc_arbol[k][0])
-            nl = True
+            nl,n,k,indentacion,arbol = analizar_arbol(arbol,indentacion,k,n,nl,dicc_arbol,posiciones,flecha,lista_de_seguimiento)
         if nl:
             arbol += "\n"
-        
         posiciones[n-1] += 1
         k = lista_de_seguimiento[-1]
         if posiciones[n-1] > 1:
@@ -74,8 +67,21 @@ def dibujar_arbol(archivo):
             n -= 1             
     return arbol
 
-        
-        
+def analizar_arbol(arbol,indentacion,k,n,nl,dicc_arbol,posiciones,flecha,lista_de_seguimiento):
+    """[Autor: Mateo Villarinos]
+       [Ayuda: funcion que mediante diferentes algoritmos va dibujando el arbol]
+    """
+    if arbol[-1:] == "\n":
+        indentacion = (n)*6*" "
+        for campo in lista_de_seguimiento:
+            indentacion += len(campo)*" "+(len(dicc_arbol[campo][0])+2)*" "
+        arbol += indentacion
+    k = dicc_arbol[k][posiciones[n]]
+    n += 1
+    arbol += flecha + k + "({})".format(dicc_arbol[k][0])
+    nl = True
+    return nl,n,k,indentacion,arbol
+      
 def leer():
     """[Autor: Mateo Villarinos]
        [Ayuda: funcion main]
@@ -83,6 +89,5 @@ def leer():
     fuente_unico= open('fuente_unico.csv','r' )
     print(dibujar_arbol(fuente_unico))
     fuente_unico.close()
-    
 
-
+leer()
