@@ -377,7 +377,4 @@ def cargar_archivo():
     mezcla_archivos_intermedios()
 
 
-cargar_archivo()
 
-#buscar nombres buenos ,recortar codigo con devolucion de expresiones
-#preguntar lo que no entendi
