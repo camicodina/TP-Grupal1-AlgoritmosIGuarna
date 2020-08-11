@@ -34,13 +34,13 @@ def calculo_nombre_modulo(ruta_modulo):
 
     return nombre_modulo
 
-def validacion_funcion_inicial(linea_modulo):
+def validacion_inicio_funcion(linea_modulo):
     '''[Autor:Andres Guerrero]
        [Ayuda:valida si la funcion a iniciado para abrir el ciclo] 
     ''' 
     return linea_modulo.startswith('def ')
 
-def validacion_funcion_final(validacion_final,linea_modulo):
+def validacion_final_funcion(validacion_final,linea_modulo):
     '''[Autor:Andres Guerrero]
        [Ayuda:busca si a finalizado la funcion para darle cierre al ciclo] 
     '''
@@ -119,10 +119,11 @@ def calculo_comentario_multiples(linea_modulo,funciones,nombre_funcion,archivo_m
        [Ayuda:diferencia si es un comentario multiple y ahi elige si es un autor,
        ayuda o linea simple y guarda en el diccionario, con su clave respectiva] 
     '''
-    comentario_multiple = '"""' 
+    comentario_multiple1 = "'''" 
+    comentario_multiple2 = '"""'
     linea_comentario = linea_modulo
 
-    if comentario_multiple in linea_comentario:
+    if comentario_multiple1 in linea_comentario or comentario_multiple2 in linea_comentario:
         comentario_multiple_cierre = True
         while comentario_multiple_cierre:
             if '[Autor:' in linea_comentario:
@@ -135,7 +136,7 @@ def calculo_comentario_multiples(linea_modulo,funciones,nombre_funcion,archivo_m
                 separador_linea = linea_comentario + '$'
                 funciones[nombre_funcion][INDICE_LINEAS_COMENTARIOS] += separador_linea
            
-            if comentario_multiple in linea_comentario:  #Si encuentra el segundo """ se sale del ciclo
+            if comentario_multiple1 in linea_comentario or comentario_multiple2 in linea_comentario:  #Si encuentra el segundo """ se sale del ciclo
                 comentario_multiple_cierre = False
     return funciones
 
@@ -144,6 +145,8 @@ def lineas_restantes(funciones,linea_modulo,nombre_funcion):
        [Ayuda:guarda una linea que no este en comentario multiple, es decir del codigo y
        selecciona la parte del comentario simple y la de codigo] 
     '''
+    comentario_multiple1 = "'''" 
+    comentario_multiple2 = '"""'
     nueva_linea = linea_modulo.replace('\n','')
     linea_codigo_vacia = linea_modulo.replace('\n','').strip(' ')
     
@@ -156,7 +159,7 @@ def lineas_restantes(funciones,linea_modulo,nombre_funcion):
         if linea_codigo != '$':
             funciones[nombre_funcion][INDICE_LINEAS_CODIGO] += linea_codigo
 
-    elif not '"""' in nueva_linea and linea_codigo_vacia and not nueva_linea.startswith('def ') and nueva_linea.startswith('    '):
+    elif not comentario_multiple1 in nueva_linea or not comentario_multiple2 in nueva_linea and linea_codigo_vacia and not nueva_linea.startswith('def ') and nueva_linea.startswith('    '):
         linea_codigo = nueva_linea.lstrip(' ') + '$'
         funciones[nombre_funcion][INDICE_LINEAS_CODIGO] += linea_codigo
     return funciones
@@ -184,7 +187,7 @@ def ordenar_grabar_funciones(funciones,nombre_modulo,archivo_modulo,archivo_ruta
 
 def calculo_funcion(linea_modulo,funciones,nombre_modulo,archivo_modulo):
     while linea_modulo != '':
-        validacion_inicio = validacion_funcion_inicial(linea_modulo)
+        validacion_inicio = validacion_inicio_funcion(linea_modulo)
         validacion_final = True
         while validacion_inicio and validacion_final:
  
@@ -195,7 +198,7 @@ def calculo_funcion(linea_modulo,funciones,nombre_modulo,archivo_modulo):
             funciones = lineas_restantes(funciones,linea_modulo,nombre_guardado)  
             linea_modulo = leer_linea_txt(archivo_modulo)
 
-            validacion_final = validacion_funcion_final(validacion_final,linea_modulo)
+            validacion_final = validacion_final_funcion(validacion_final,linea_modulo)
             if not validacion_final:       
                 lineas_restantes(funciones,linea_modulo,nombre_guardado)
 
@@ -276,7 +279,7 @@ def leer_lineas_archivos(lista_archivos,default):
 
 def validar_fin_lineas(lista_lineas,Fin):
     '''[Autor:Andres Guerrero]
-       [Ayuda:adentro de la parte de mezcla naliza cual de las lineas a llegado al fin] 
+       [Ayuda:adentro de la parte de mezcla anliza cual de las lineas a llegado al fin] 
     '''
 
     cont_fin = 0 # cantidad de archivos que llegaron al fin
@@ -374,3 +377,7 @@ def cargar_archivo():
     mezcla_archivos_intermedios()
 
 
+cargar_archivo()
+
+#buscar nombres buenos ,recortar codigo con devolucion de expresiones
+#preguntar lo que no entendi
